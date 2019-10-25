@@ -47,6 +47,9 @@ const (
 	ColonToken
 	RightCurlyToken
 	WhitespaceToken
+	LeftParenToken
+	RightParenToken
+	CommaToken
 )
 
 func (tt TokenType) String() string {
@@ -61,8 +64,12 @@ func (tt TokenType) String() string {
 		return "colon"
 	case RightCurlyToken:
 		return "right curly"
-	case WhitespaceToken:
-		return "whitespace"
+	case LeftParenToken:
+		return "left paren"
+	case RightParenToken:
+		return "right paren"
+	case CommaToken:
+		return "comma"
 	default:
 		return "unknown"
 	}

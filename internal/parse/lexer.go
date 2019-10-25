@@ -78,6 +78,15 @@ func (l *Lexer) Lex(c chan Token) {
 		case r == ':':
 			c <- l.newToken(ColonToken, "")
 			l.increment()
+		case r == '(':
+			c <- l.newToken(LeftParenToken, "")
+			l.increment()
+		case r == ')':
+			c <- l.newToken(RightParenToken, "")
+			l.increment()
+		case r == ',':
+			c <- l.newToken(CommaToken, "")
+			l.increment()
 		case unicode.IsSpace(r):
 			w := l.while(unicode.IsSpace)
 			c <- l.newToken(WhitespaceToken, string(len(w)))
@@ -86,6 +95,7 @@ func (l *Lexer) Lex(c chan Token) {
 			c <- l.newToken(TextToken, value)
 		default:
 			c <- l.newToken(ErrorToken, fmt.Sprintf("unknown rune %v", r))
+			l.increment()
 		}
 	}
 	close(c)
