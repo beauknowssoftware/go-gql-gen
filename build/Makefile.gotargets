@@ -1,0 +1,73 @@
+PHONY: vendor format-code build-cmds build-code build-vendor-tools unit-test
+
+define vendor-cmd-target
+bin/$(call lastPath,$1): vendor
+	$(call trace,installing $(call lastPath,$1))
+	pushd vendor/$1 > /dev/null
+	go build -i -o $(CURDIR)/$(TOOL_FOLDER)/$(call lastPath,$1) .
+	popd > /dev/null
+
+$(call lastPath,$1): bin/$(call lastPath,$1)
+endef
+
+define cmd-target
+bin/$1: vendor $(wildcard cmd/$1/*) $(GO_FILES)
+	$(call trace,installing $1)
+	rm -f bin/$1
+	go install ./cmd/$1
+
+$1: bin/$1
+endef
+
+define compiledtest
+	./bin/test/$1/$(call lastPath,$2) $3
+endef
+
+ifdef DEBUG
+define test
+	gotestsum --format standard-verbose -- -tags $1 ./$2... $3
+endef
+else
+define test
+	gotestsum --format short -- -tags $1 ./$2... $3
+endef
+endif
+
+build-vendor-tools: $(foreach tool, 					   \
+			          $(VENDOR_TOOLS), 					   \
+			          bin/$(lastword $(subst /, ,$(tool))) \
+			        )
+
+vendor: Gopkg.toml
+	$(call trace,installing go dependencies)
+	mkdir -p $@
+	rm -f Gopkg.lock
+	dep ensure
+	dep status
+	touch $@
+
+$(foreach tool, 							\
+  $(VENDOR_TOOLS), 							\
+  $(eval $(call vendor-cmd-target,$(tool))) \
+)
+
+$(foreach cmd,						\
+  $(CMDS),    						\
+  $(eval $(call cmd-target,$(cmd))) \
+)
+build-cmds: $(foreach cmd,$(CMDS),$(cmd))
+
+format-code: bin/goimports bin/golint
+	$(call trace,formatting code)
+	go fmt ./internal/...
+	go fmt ./cmd/...
+	goimports -w internal
+	goimports -w cmd
+	golint ./internal/... | grep -v 'exported .* should have comment or be unexported' || true
+	golint ./cmd/... | grep -v 'exported .* should have comment or be unexported' || true
+
+build-code: build-vendor-tools build-cmds
+
+unit-test: bin/gotestsum
+	$(call trace,executing unit tests)
+	$(call test,unit,internal)

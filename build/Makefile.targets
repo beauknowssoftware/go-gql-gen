@@ -1,0 +1,30 @@
+PHONY: build tools format clean cleanable cicd-setup cicd-cleanup cicd-setup-path
+
+build: format build-code
+
+tools:
+	$(call trace,tool versions)
+	make -v
+	go version
+	dep version
+
+format: format-code
+
+clean:
+	$(call trace,cleaning files)
+	git clean -fdX
+
+cleanable:
+	git clean -ndX
+
+cicd-setup:
+	$(call trace,setting up for cicd)
+	mkdir -p $(CICD_WORKING_PATH)
+	cp -r $(CURDIR)/* $(CICD_WORKING_PATH)
+
+cicd-cleanup:
+	$(call trace,cleaning up cicd)
+	cp -r $(CICD_WORKING_PATH)/* $(CURDIR)
+
+cicd-setup-path:
+	echo $(CICD_WORKING_PATH)

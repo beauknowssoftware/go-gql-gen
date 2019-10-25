@@ -1,0 +1,28 @@
+lastPath = $(strip $(lastword $(subst /, ,$1)))
+lastName = $(strip $(firstword $(subst ., ,$(call lastPath,$1))))
+
+ifdef NO_COLOR
+TF_FLAGS := -no-color
+define trace
+	echo ""
+	echo "================================================================================"
+	echo "$1..."
+	echo "================================================================================"
+endef
+else
+define trace
+	echo ""
+	echo -e "\033[104;97m$1...\033[0m"
+endef
+endif
+
+ifdef ENV
+define if-env
+$1: $2
+endef
+else
+define if-env
+$1:
+	echo "missing env"
+endef
+endif

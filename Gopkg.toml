@@ -1,0 +1,7 @@
+required = ["golang.org/x/lint/golint","golang.org/x/tools/cmd/goimports", "gotest.tools/gotestsum"]
+
+[[constraint]]
+  name = "github.com/google/go-cmp"
+  version = "v0.3.1"
+
+

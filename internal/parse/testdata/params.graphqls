@@ -1,0 +1,7 @@
+type Query {
+    ping(a: Int, b: String): String
+}
+
+schema {
+    query: Query
+}
