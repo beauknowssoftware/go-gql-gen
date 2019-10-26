@@ -51,7 +51,10 @@ func main() {
 					if tn.Name == "Query" {
 						return false
 					}
-					if fn.Name == "id" {
+					if strings.HasSuffix(fn.Name, "Id") {
+						prefix := strings.TrimSuffix(fn.Name, "Id")
+						fmt.Printf("  %vID", strings.Title(prefix))
+					} else if fn.Name == "id" {
 						fmt.Print("  ID")
 					} else {
 						fmt.Printf("  %v", strings.Title(fn.Name))
