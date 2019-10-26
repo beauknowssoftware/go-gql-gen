@@ -100,6 +100,9 @@ func TestLex(t *testing.T) {
 				{
 					TokenType: parse.RightCurlyToken,
 				},
+				{
+					TokenType: parse.EOFToken,
+				},
 			},
 		},
 		"requiredFieldType.graphqls": {
@@ -152,6 +155,9 @@ func TestLex(t *testing.T) {
 				},
 				{
 					TokenType: parse.RightCurlyToken,
+				},
+				{
+					TokenType: parse.EOFToken,
 				},
 			},
 		},
@@ -234,6 +240,9 @@ func TestLex(t *testing.T) {
 				{
 					TokenType: parse.RightCurlyToken,
 				},
+				{
+					TokenType: parse.EOFToken,
+				},
 			},
 		},
 		"requiredArrayElement.graphqls": {
@@ -292,6 +301,9 @@ func TestLex(t *testing.T) {
 				},
 				{
 					TokenType: parse.RightCurlyToken,
+				},
+				{
+					TokenType: parse.EOFToken,
 				},
 			},
 		},
@@ -355,6 +367,9 @@ func TestLex(t *testing.T) {
 				{
 					TokenType: parse.RightCurlyToken,
 				},
+				{
+					TokenType: parse.EOFToken,
+				},
 			},
 		},
 		"requiredArray.graphqls": {
@@ -414,6 +429,9 @@ func TestLex(t *testing.T) {
 				{
 					TokenType: parse.RightCurlyToken,
 				},
+				{
+					TokenType: parse.EOFToken,
+				},
 			},
 		},
 		"array.graphqls": {
@@ -469,6 +487,9 @@ func TestLex(t *testing.T) {
 				},
 				{
 					TokenType: parse.RightCurlyToken,
+				},
+				{
+					TokenType: parse.EOFToken,
 				},
 			},
 		},
@@ -533,6 +554,9 @@ func TestLex(t *testing.T) {
 				},
 				{
 					TokenType: parse.RightCurlyToken,
+				},
+				{
+					TokenType: parse.EOFToken,
 				},
 			},
 		},
@@ -609,6 +633,9 @@ func TestLex(t *testing.T) {
 				{
 					TokenType: parse.RightCurlyToken,
 				},
+				{
+					TokenType: parse.EOFToken,
+				},
 			},
 		},
 		"ping.graphqls": {
@@ -658,6 +685,9 @@ func TestLex(t *testing.T) {
 				},
 				{
 					TokenType: parse.RightCurlyToken,
+				},
+				{
+					TokenType: parse.EOFToken,
 				},
 			},
 		},

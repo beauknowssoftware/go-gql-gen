@@ -253,7 +253,7 @@ var parseDefinition = choice(parseTypeDef, parseInput, parseSchema)
 
 var parseDocument = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
 	return DocumentNode{nodeLoc, nodes[0].(MultiNode).Nodes}, nil
-}, multi(parseDefinition))
+}, multi(parseDefinition), token(EOFToken))
 
 type Error struct {
 	Error error
@@ -270,6 +270,9 @@ func (p *Parser) Parse() (Node, *Error) {
 	d, err := parseDocument(p)
 	if err != nil {
 		return nil, &Error{err, p.current()}
+	}
+	if p.i < len(p.tokens)-1 {
+		return nil, &Error{errors.New("stopped parsing prematurely"), p.current()}
 	}
 	return d, nil
 }

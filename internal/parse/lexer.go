@@ -115,5 +115,6 @@ func (l *Lexer) Lex(c chan Token) {
 			l.increment()
 		}
 	}
+	c <- l.newToken(EOFToken, "", l.loc)
 	close(c)
 }
