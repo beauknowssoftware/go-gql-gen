@@ -56,10 +56,69 @@ func (p *Parser) tryConsume(tt TokenType, value string) error {
 	return nil
 }
 
+func (p *Parser) parseParam() (*ParamNode, error) {
+	name, error := p.tryConsumeType(TextToken)
+	if error != nil {
+		return nil, error
+	}
+
+	if err := p.tryConsume(ColonToken, ""); err != nil {
+		return nil, err
+	}
+
+	typ, err := p.tryConsumeType(TextToken)
+	if err != nil {
+		return nil, err
+	}
+
+	n := ParamNode{
+		Name: name.Value,
+		Type: typ.Value,
+	}
+	return &n, nil
+}
+
+func (p *Parser) maybeParseParams() ([]ParamNode, error) {
+	if !p.maybeConsume(LeftParenToken, "") {
+		return nil, nil
+	}
+
+	params := make([]ParamNode, 0)
+
+	n, err := p.parseParam()
+	if err != nil {
+		return nil, err
+	}
+	params = append(params, *n)
+
+	for {
+		if !p.maybeConsume(CommaToken, "") {
+			break
+		}
+
+		n, err := p.parseParam()
+		if err != nil {
+			return nil, err
+		}
+		params = append(params, *n)
+	}
+
+	if err := p.tryConsume(RightParenToken, ""); err != nil {
+		return nil, err
+	}
+
+	return params, nil
+}
+
 func (p *Parser) maybeParseField() (*FieldNode, error) {
 	name, parsed := p.maybeConsumeType(TextToken)
 	if !parsed {
 		return nil, nil
+	}
+
+	params, err := p.maybeParseParams()
+	if err != nil {
+		return nil, err
 	}
 
 	if err := p.tryConsume(ColonToken, ""); err != nil {
@@ -72,8 +131,9 @@ func (p *Parser) maybeParseField() (*FieldNode, error) {
 	}
 
 	f := FieldNode{
-		Name: name.Value,
-		Type: typ.Value,
+		Name:   name.Value,
+		Type:   typ.Value,
+		Params: params,
 	}
 	return &f, nil
 }

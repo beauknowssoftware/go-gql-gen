@@ -32,11 +32,19 @@ type SchemaNode struct {
 func (n SchemaNode) Kind() string { return "schema" }
 
 type FieldNode struct {
+	Name   string
+	Type   string
+	Params []ParamNode
+}
+
+func (n FieldNode) Kind() string { return "field" }
+
+type ParamNode struct {
 	Name string
 	Type string
 }
 
-func (n FieldNode) Kind() string { return "field" }
+func (n ParamNode) Kind() string { return "param" }
 
 type TokenType int
 
