@@ -140,6 +140,104 @@ func TestTraverse(t *testing.T) {
 				},
 			},
 		},
+		"directives.graphqls": {
+			expectedNodes: []parse.Node{
+				parse.DocumentNode{
+					Definitions: []parse.Node{
+						parse.TypeDefNode{
+							Name: "Query",
+							Fields: []parse.Node{
+								parse.FieldNode{
+									Name: "ping",
+									Type: parse.TypeNode{
+										Name: "String",
+									},
+									Directives: []parse.Node{
+										parse.DirectiveNode{
+											Name: "my_directive",
+										},
+										parse.DirectiveNode{
+											Name: "another_directive",
+										},
+									},
+								},
+							},
+						},
+						parse.SchemaNode{
+							Fields: []parse.Node{
+								parse.FieldNode{
+									Name: "query",
+									Type: parse.TypeNode{
+										Name: "Query",
+									},
+								},
+							},
+						},
+					},
+				},
+				parse.TypeDefNode{
+					Name: "Query",
+					Fields: []parse.Node{
+						parse.FieldNode{
+							Name: "ping",
+							Type: parse.TypeNode{
+								Name: "String",
+							},
+							Directives: []parse.Node{
+								parse.DirectiveNode{
+									Name: "my_directive",
+								},
+								parse.DirectiveNode{
+									Name: "another_directive",
+								},
+							},
+						},
+					},
+				},
+				parse.FieldNode{
+					Name: "ping",
+					Type: parse.TypeNode{
+						Name: "String",
+					},
+					Directives: []parse.Node{
+						parse.DirectiveNode{
+							Name: "my_directive",
+						},
+						parse.DirectiveNode{
+							Name: "another_directive",
+						},
+					},
+				},
+				parse.TypeNode{
+					Name: "String",
+				},
+				parse.DirectiveNode{
+					Name: "my_directive",
+				},
+				parse.DirectiveNode{
+					Name: "another_directive",
+				},
+				parse.SchemaNode{
+					Fields: []parse.Node{
+						parse.FieldNode{
+							Name: "query",
+							Type: parse.TypeNode{
+								Name: "Query",
+							},
+						},
+					},
+				},
+				parse.FieldNode{
+					Name: "query",
+					Type: parse.TypeNode{
+						Name: "Query",
+					},
+				},
+				parse.TypeNode{
+					Name: "Query",
+				},
+			},
+		},
 		"ping.graphqls": {
 			expectedNodes: []parse.Node{
 				parse.DocumentNode{

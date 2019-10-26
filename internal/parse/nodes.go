@@ -75,10 +75,15 @@ type FieldNode struct {
 }
 
 func (n FieldNode) Children() []Node {
-	children := make([]Node, len(n.Params)+1, len(n.Params)+1)
+	paramCount := len(n.Params)
+	childCount := paramCount + len(n.Directives) + 1
+	children := make([]Node, childCount, childCount)
 	children[0] = n.Type
 	for i, n := range n.Params {
 		children[i+1] = n
+	}
+	for i, n := range n.Directives {
+		children[i+1+paramCount] = n
 	}
 	return children
 }
