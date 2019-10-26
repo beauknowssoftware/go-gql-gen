@@ -18,7 +18,7 @@ func NewLexer(document string) Lexer {
 	return Lexer{lines: lines, dSlice: dSlice}
 }
 
-func (l Lexer) newToken(t TokenType, v string) Token {
+func (l Lexer) newToken(t TokenType, v string, loc Loc) Token {
 	return Token{t, l.loc, v}
 }
 
@@ -69,34 +69,36 @@ func (l *Lexer) Lex(c chan Token) {
 		r := l.currentRune()
 		switch {
 		case r == '{':
-			c <- l.newToken(LeftCurlyToken, "")
+			c <- l.newToken(LeftCurlyToken, "", l.loc)
 			l.increment()
 		case r == '}':
-			c <- l.newToken(RightCurlyToken, "")
+			c <- l.newToken(RightCurlyToken, "", l.loc)
 			l.increment()
 		case r == ':':
-			c <- l.newToken(ColonToken, "")
+			c <- l.newToken(ColonToken, "", l.loc)
 			l.increment()
 		case r == '(':
-			c <- l.newToken(LeftParenToken, "")
+			c <- l.newToken(LeftParenToken, "", l.loc)
 			l.increment()
 		case r == ')':
-			c <- l.newToken(RightParenToken, "")
+			c <- l.newToken(RightParenToken, "", l.loc)
 			l.increment()
 		case r == ',':
-			c <- l.newToken(CommaToken, "")
+			c <- l.newToken(CommaToken, "", l.loc)
 			l.increment()
 		case r == '!':
-			c <- l.newToken(BangToken, "")
+			c <- l.newToken(BangToken, "", l.loc)
 			l.increment()
 		case unicode.IsSpace(r):
+			s := l.loc
 			w := l.while(unicode.IsSpace)
-			c <- l.newToken(WhitespaceToken, string(len(w)))
+			c <- l.newToken(WhitespaceToken, string(len(w)), s)
 		case unicode.IsLetter(r):
+			s := l.loc
 			value := l.while(unicode.IsLetter)
-			c <- l.newToken(TextToken, value)
+			c <- l.newToken(TextToken, value, s)
 		default:
-			c <- l.newToken(ErrorToken, fmt.Sprintf("unknown rune %v", r))
+			c <- l.newToken(ErrorToken, fmt.Sprintf("unknown rune %v", r), l.loc)
 			l.increment()
 		}
 	}

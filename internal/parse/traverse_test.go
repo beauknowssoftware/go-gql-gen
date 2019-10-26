@@ -164,7 +164,7 @@ func TestTraverse(t *testing.T) {
 				return true
 			})
 
-			if diff := cmp.Diff(test.expectedNodes, nodes); diff != "" {
+			if diff := cmp.Diff(test.expectedNodes, nodes, ignoreNodePosition); diff != "" {
 				t.Fatalf("mismatch (expected, got) %v", diff)
 			}
 		})

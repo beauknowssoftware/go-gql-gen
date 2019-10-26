@@ -22,6 +22,10 @@ func (p *Parser) consume() {
 	}
 }
 
+func (p Parser) nodeStart() NodeLoc {
+	return NodeLoc{p.current.Loc}
+}
+
 func (p *Parser) tryConsumeType(tt TokenType) (*Token, error) {
 	if p.current.TokenType != tt {
 		return nil, fmt.Errorf("expected %v token got %v token", tt, p.current.TokenType)
@@ -160,6 +164,8 @@ func (p *Parser) parseFields() ([]Node, error) {
 }
 
 func (p *Parser) maybeParseSchema() (*SchemaNode, error) {
+	nodeLoc := p.nodeStart()
+
 	if !p.maybeConsume(TextToken, "schema") {
 		return nil, nil
 	}
@@ -177,10 +183,12 @@ func (p *Parser) maybeParseSchema() (*SchemaNode, error) {
 		return nil, err
 	}
 
-	return &SchemaNode{fields}, nil
+	return &SchemaNode{nodeLoc, fields}, nil
 }
 
 func (p *Parser) maybeParseType() (*TypeNode, error) {
+	nodeLoc := p.nodeStart()
+
 	if !p.maybeConsume(TextToken, "type") {
 		return nil, nil
 	}
@@ -203,7 +211,7 @@ func (p *Parser) maybeParseType() (*TypeNode, error) {
 		return nil, err
 	}
 
-	return &TypeNode{name.Value, fields}, nil
+	return &TypeNode{nodeLoc, name.Value, fields}, nil
 }
 
 func (p *Parser) maybeParseDefinition() (DefinitionNode, error) {
@@ -242,11 +250,12 @@ func (p *Parser) parseDefinitions() ([]Node, error) {
 }
 
 func (p *Parser) parseDocument() (*DocumentNode, error) {
+	nodeLoc := p.nodeStart()
 	definitions, err := p.parseDefinitions()
 	if err != nil {
 		return nil, err
 	}
-	return &DocumentNode{definitions}, nil
+	return &DocumentNode{nodeLoc, definitions}, nil
 }
 
 type Error struct {

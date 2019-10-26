@@ -3,9 +3,13 @@ package parse_test
 import (
 	"testing"
 
+	"github.com/google/go-cmp/cmp/cmpopts"
+
 	"github.com/beauknowssoftware/graphqlgen/internal/parse"
 	"github.com/google/go-cmp/cmp"
 )
+
+var ignoreNodePosition = cmpopts.IgnoreFields(parse.NodeLoc{}, "NodeLoc")
 
 func TestParse(t *testing.T) {
 	tests := map[string]struct {
@@ -140,7 +144,7 @@ func TestParse(t *testing.T) {
 				t.Fatalf("failed to parse: %v (%v)", err.Error, err.Token)
 			}
 
-			if diff := cmp.Diff(&test.expectedAST, ast); diff != "" {
+			if diff := cmp.Diff(&test.expectedAST, ast, ignoreNodePosition); diff != "" {
 				t.Fatalf("mismatch (expected, got) %v", diff)
 			}
 		})

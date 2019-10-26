@@ -2,9 +2,19 @@ package parse
 
 type Node interface {
 	Children() []Node
+	Loc() Loc
+}
+
+type NodeLoc struct {
+	NodeLoc Loc
+}
+
+func (n NodeLoc) Loc() Loc {
+	return n.Loc()
 }
 
 type DocumentNode struct {
+	NodeLoc
 	Definitions []Node
 }
 
@@ -21,6 +31,7 @@ type DefinitionNode interface {
 }
 
 type TypeNode struct {
+	NodeLoc
 	Name   string
 	Fields []Node
 }
@@ -34,6 +45,7 @@ func (n TypeNode) Children() []Node {
 }
 
 type SchemaNode struct {
+	NodeLoc
 	Fields []Node
 }
 
@@ -46,6 +58,7 @@ func (n SchemaNode) Children() []Node {
 }
 
 type FieldNode struct {
+	NodeLoc
 	Name     string
 	Type     string
 	Required bool
@@ -61,6 +74,7 @@ func (n FieldNode) Children() []Node {
 }
 
 type ParamNode struct {
+	NodeLoc
 	Name     string
 	Type     string
 	Required bool
