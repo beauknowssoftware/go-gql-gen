@@ -87,6 +87,9 @@ func (l *Lexer) Lex(c chan Token) {
 		case r == ',':
 			c <- l.newToken(CommaToken, "")
 			l.increment()
+		case r == '!':
+			c <- l.newToken(BangToken, "")
+			l.increment()
 		case unicode.IsSpace(r):
 			w := l.while(unicode.IsSpace)
 			c <- l.newToken(WhitespaceToken, string(len(w)))

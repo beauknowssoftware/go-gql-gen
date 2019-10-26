@@ -15,6 +15,59 @@ func TestLex(t *testing.T) {
 	tests := map[string]struct {
 		expectedTokens []parse.Token
 	}{
+		"requiredFieldType.graphqls": {
+			expectedTokens: []parse.Token{
+				{
+					TokenType: parse.TextToken,
+					Value:     "type",
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "Query",
+				},
+				{
+					TokenType: parse.LeftCurlyToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "ping",
+				},
+				{
+					TokenType: parse.ColonToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "String",
+				},
+				{
+					TokenType: parse.BangToken,
+				},
+				{
+					TokenType: parse.RightCurlyToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "schema",
+				},
+				{
+					TokenType: parse.LeftCurlyToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "query",
+				},
+				{
+					TokenType: parse.ColonToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "Query",
+				},
+				{
+					TokenType: parse.RightCurlyToken,
+				},
+			},
+		},
 		"params.graphqls": {
 			expectedTokens: []parse.Token{
 				{

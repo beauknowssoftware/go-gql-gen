@@ -58,6 +58,7 @@ const (
 	LeftParenToken
 	RightParenToken
 	CommaToken
+	BangToken
 )
 
 func (tt TokenType) String() string {
@@ -78,6 +79,8 @@ func (tt TokenType) String() string {
 		return "right paren"
 	case CommaToken:
 		return "comma"
+	case BangToken:
+		return "bang"
 	default:
 		return "unknown"
 	}
