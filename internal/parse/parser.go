@@ -154,10 +154,9 @@ var parseParameter = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
 	return ParamNode{
 		nodeLoc,
 		nodes[0].(TokenNode).Value,
-		nodes[2].(TokenNode).Value,
-		nodes[3] != nil,
+		nodes[2],
 	}, nil
-}, identifier, token(ColonToken), identifier, maybe(required))
+}, identifier, token(ColonToken), parseType)
 
 var parseParameterList = multiSep(parseParameter, token(CommaToken))
 
@@ -175,28 +174,35 @@ var parseDirective = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
 	}, nil
 }, token(AtToken), identifier)
 
-var parseField = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
-	if (nodes[3] == nil) != (nodes[5] == nil) {
+var parseType = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
+	if (nodes[0] == nil) != (nodes[2] == nil) {
 		return nil, errors.New("mismatched array brackets")
 	}
 
+	return TypeNode{
+		nodeLoc,
+		nodes[1].(TokenNode).Value,
+		nodes[3] != nil,
+		nodes[0] != nil,
+	}, nil
+}, maybe(token(LeftBracketToken)), identifier, maybe(token(RightBracketToken)), maybe(required))
+
+var parseField = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
 	f := FieldNode{
 		nodeLoc,
 		nodes[0].(TokenNode).Value,
-		nodes[4].(TokenNode).Value,
-		nodes[6] != nil,
+		nodes[3],
 		nil,
 		nil,
-		nodes[3] != nil,
 	}
 	if nodes[1] != nil {
 		f.Params = nodes[1].(MultiNode).Nodes
 	}
-	if directives := nodes[7].(MultiNode).Nodes; len(directives) > 0 {
+	if directives := nodes[4].(MultiNode).Nodes; len(directives) > 0 {
 		f.Directives = directives
 	}
 	return f, nil
-}, identifier, maybe(parseParameters), token(ColonToken), maybe(token(LeftBracketToken)), identifier, maybe(token(RightBracketToken)), maybe(required), multi(parseDirective))
+}, identifier, maybe(parseParameters), token(ColonToken), parseType, multi(parseDirective))
 
 var schemaKeyword = keyword("schema")
 
@@ -209,15 +215,15 @@ var parseSchema = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
 
 var typeKeyword = keyword("type")
 
-var parseType = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
-	return TypeNode{
+var parseTypeDef = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
+	return TypeDefNode{
 		nodeLoc,
 		nodes[1].(TokenNode).Value,
 		nodes[3].(MultiNode).Nodes,
 	}, nil
 }, typeKeyword, identifier, token(LeftCurlyToken), multi(parseField), token(RightCurlyToken))
 
-var parseDefinition = choice(parseType, parseSchema)
+var parseDefinition = choice(parseTypeDef, parseSchema)
 
 var parseDocument = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
 	return DocumentNode{nodeLoc, nodes[0].(MultiNode).Nodes}, nil

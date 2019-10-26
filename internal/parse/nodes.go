@@ -39,13 +39,13 @@ type DefinitionNode interface {
 	Node
 }
 
-type TypeNode struct {
+type TypeDefNode struct {
 	NodeLoc
 	Name   string
 	Fields []Node
 }
 
-func (n TypeNode) Children() []Node {
+func (n TypeDefNode) Children() []Node {
 	children := make([]Node, len(n.Fields), len(n.Fields))
 	for i, n := range n.Fields {
 		children[i] = n
@@ -69,30 +69,39 @@ func (n SchemaNode) Children() []Node {
 type FieldNode struct {
 	NodeLoc
 	Name       string
-	Type       string
-	Required   bool
+	Type       Node
 	Params     []Node
 	Directives []Node
-	Multiple   bool
 }
 
 func (n FieldNode) Children() []Node {
-	children := make([]Node, len(n.Params), len(n.Params))
+	children := make([]Node, len(n.Params)+1, len(n.Params)+1)
+	children[0] = n.Type
 	for i, n := range n.Params {
-		children[i] = n
+		children[i+1] = n
 	}
 	return children
 }
 
-type ParamNode struct {
+type TypeNode struct {
 	NodeLoc
 	Name     string
-	Type     string
 	Required bool
+	Multiple bool
+}
+
+func (n TypeNode) Children() []Node {
+	return nil
+}
+
+type ParamNode struct {
+	NodeLoc
+	Name string
+	Type Node
 }
 
 func (n ParamNode) Children() []Node {
-	return nil
+	return []Node{n.Type}
 }
 
 type DirectiveNode struct {

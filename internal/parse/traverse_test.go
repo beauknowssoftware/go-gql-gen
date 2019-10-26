@@ -16,20 +16,26 @@ func TestTraverse(t *testing.T) {
 			expectedNodes: []parse.Node{
 				parse.DocumentNode{
 					Definitions: []parse.Node{
-						parse.TypeNode{
+						parse.TypeDefNode{
 							Name: "Query",
 							Fields: []parse.Node{
 								parse.FieldNode{
 									Name: "ping",
-									Type: "String",
+									Type: parse.TypeNode{
+										Name: "String",
+									},
 									Params: []parse.Node{
 										parse.ParamNode{
 											Name: "a",
-											Type: "Int",
+											Type: parse.TypeNode{
+												Name: "Int",
+											},
 										},
 										parse.ParamNode{
 											Name: "b",
-											Type: "String",
+											Type: parse.TypeNode{
+												Name: "String",
+											},
 										},
 									},
 								},
@@ -39,26 +45,34 @@ func TestTraverse(t *testing.T) {
 							Fields: []parse.Node{
 								parse.FieldNode{
 									Name: "query",
-									Type: "Query",
+									Type: parse.TypeNode{
+										Name: "Query",
+									},
 								},
 							},
 						},
 					},
 				},
-				parse.TypeNode{
+				parse.TypeDefNode{
 					Name: "Query",
 					Fields: []parse.Node{
 						parse.FieldNode{
 							Name: "ping",
-							Type: "String",
+							Type: parse.TypeNode{
+								Name: "String",
+							},
 							Params: []parse.Node{
 								parse.ParamNode{
 									Name: "a",
-									Type: "Int",
+									Type: parse.TypeNode{
+										Name: "Int",
+									},
 								},
 								parse.ParamNode{
 									Name: "b",
-									Type: "String",
+									Type: parse.TypeNode{
+										Name: "String",
+									},
 								},
 							},
 						},
@@ -66,37 +80,63 @@ func TestTraverse(t *testing.T) {
 				},
 				parse.FieldNode{
 					Name: "ping",
-					Type: "String",
+					Type: parse.TypeNode{
+						Name: "String",
+					},
 					Params: []parse.Node{
 						parse.ParamNode{
 							Name: "a",
-							Type: "Int",
+							Type: parse.TypeNode{
+								Name: "Int",
+							},
 						},
 						parse.ParamNode{
 							Name: "b",
-							Type: "String",
+							Type: parse.TypeNode{
+								Name: "String",
+							},
 						},
 					},
 				},
+				parse.TypeNode{
+					Name: "String",
+				},
 				parse.ParamNode{
 					Name: "a",
-					Type: "Int",
+					Type: parse.TypeNode{
+						Name: "Int",
+					},
+				},
+				parse.TypeNode{
+					Name: "Int",
 				},
 				parse.ParamNode{
 					Name: "b",
-					Type: "String",
+					Type: parse.TypeNode{
+						Name: "String",
+					},
+				},
+				parse.TypeNode{
+					Name: "String",
 				},
 				parse.SchemaNode{
 					Fields: []parse.Node{
 						parse.FieldNode{
 							Name: "query",
-							Type: "Query",
+							Type: parse.TypeNode{
+								Name: "Query",
+							},
 						},
 					},
 				},
 				parse.FieldNode{
 					Name: "query",
-					Type: "Query",
+					Type: parse.TypeNode{
+						Name: "Query",
+					},
+				},
+				parse.TypeNode{
+					Name: "Query",
 				},
 			},
 		},
@@ -104,12 +144,14 @@ func TestTraverse(t *testing.T) {
 			expectedNodes: []parse.Node{
 				parse.DocumentNode{
 					Definitions: []parse.Node{
-						parse.TypeNode{
+						parse.TypeDefNode{
 							Name: "Query",
 							Fields: []parse.Node{
 								parse.FieldNode{
 									Name: "ping",
-									Type: "String",
+									Type: parse.TypeNode{
+										Name: "String",
+									},
 								},
 							},
 						},
@@ -117,36 +159,52 @@ func TestTraverse(t *testing.T) {
 							Fields: []parse.Node{
 								parse.FieldNode{
 									Name: "query",
-									Type: "Query",
+									Type: parse.TypeNode{
+										Name: "Query",
+									},
 								},
 							},
 						},
 					},
 				},
-				parse.TypeNode{
+				parse.TypeDefNode{
 					Name: "Query",
 					Fields: []parse.Node{
 						parse.FieldNode{
 							Name: "ping",
-							Type: "String",
+							Type: parse.TypeNode{
+								Name: "String",
+							},
 						},
 					},
 				},
 				parse.FieldNode{
 					Name: "ping",
-					Type: "String",
+					Type: parse.TypeNode{
+						Name: "String",
+					},
+				},
+				parse.TypeNode{
+					Name: "String",
 				},
 				parse.SchemaNode{
 					Fields: []parse.Node{
 						parse.FieldNode{
 							Name: "query",
-							Type: "Query",
+							Type: parse.TypeNode{
+								Name: "Query",
+							},
 						},
 					},
 				},
 				parse.FieldNode{
 					Name: "query",
-					Type: "Query",
+					Type: parse.TypeNode{
+						Name: "Query",
+					},
+				},
+				parse.TypeNode{
+					Name: "Query",
 				},
 			},
 		},

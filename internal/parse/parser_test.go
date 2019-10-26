@@ -18,22 +18,28 @@ func TestParse(t *testing.T) {
 		"requiredParams.graphqls": {
 			expectedAST: parse.DocumentNode{
 				Definitions: []parse.Node{
-					parse.TypeNode{
+					parse.TypeDefNode{
 						Name: "Query",
 						Fields: []parse.Node{
 							parse.FieldNode{
 								Name: "ping",
-								Type: "String",
+								Type: parse.TypeNode{
+									Name: "String",
+								},
 								Params: []parse.Node{
 									parse.ParamNode{
-										Name:     "a",
-										Type:     "Int",
-										Required: true,
+										Name: "a",
+										Type: parse.TypeNode{
+											Name:     "Int",
+											Required: true,
+										},
 									},
 									parse.ParamNode{
-										Name:     "b",
-										Type:     "String",
-										Required: true,
+										Name: "b",
+										Type: parse.TypeNode{
+											Name:     "String",
+											Required: true,
+										},
 									},
 								},
 							},
@@ -43,7 +49,9 @@ func TestParse(t *testing.T) {
 						Fields: []parse.Node{
 							parse.FieldNode{
 								Name: "query",
-								Type: "Query",
+								Type: parse.TypeNode{
+									Name: "Query",
+								},
 							},
 						},
 					},
@@ -53,13 +61,15 @@ func TestParse(t *testing.T) {
 		"requiredFieldType.graphqls": {
 			expectedAST: parse.DocumentNode{
 				Definitions: []parse.Node{
-					parse.TypeNode{
+					parse.TypeDefNode{
 						Name: "Query",
 						Fields: []parse.Node{
 							parse.FieldNode{
-								Name:     "ping",
-								Type:     "String",
-								Required: true,
+								Name: "ping",
+								Type: parse.TypeNode{
+									Name:     "String",
+									Required: true,
+								},
 							},
 						},
 					},
@@ -67,7 +77,9 @@ func TestParse(t *testing.T) {
 						Fields: []parse.Node{
 							parse.FieldNode{
 								Name: "query",
-								Type: "Query",
+								Type: parse.TypeNode{
+									Name: "Query",
+								},
 							},
 						},
 					},
@@ -77,20 +89,26 @@ func TestParse(t *testing.T) {
 		"params.graphqls": {
 			expectedAST: parse.DocumentNode{
 				Definitions: []parse.Node{
-					parse.TypeNode{
+					parse.TypeDefNode{
 						Name: "Query",
 						Fields: []parse.Node{
 							parse.FieldNode{
 								Name: "ping",
-								Type: "String",
+								Type: parse.TypeNode{
+									Name: "String",
+								},
 								Params: []parse.Node{
 									parse.ParamNode{
 										Name: "a",
-										Type: "Int",
+										Type: parse.TypeNode{
+											Name: "Int",
+										},
 									},
 									parse.ParamNode{
 										Name: "b",
-										Type: "String",
+										Type: parse.TypeNode{
+											Name: "String",
+										},
 									},
 								},
 							},
@@ -100,7 +118,9 @@ func TestParse(t *testing.T) {
 						Fields: []parse.Node{
 							parse.FieldNode{
 								Name: "query",
-								Type: "Query",
+								Type: parse.TypeNode{
+									Name: "Query",
+								},
 							},
 						},
 					},
@@ -110,12 +130,14 @@ func TestParse(t *testing.T) {
 		"directives.graphqls": {
 			expectedAST: parse.DocumentNode{
 				Definitions: []parse.Node{
-					parse.TypeNode{
+					parse.TypeDefNode{
 						Name: "Query",
 						Fields: []parse.Node{
 							parse.FieldNode{
 								Name: "ping",
-								Type: "String",
+								Type: parse.TypeNode{
+									Name: "String",
+								},
 								Directives: []parse.Node{
 									parse.DirectiveNode{
 										Name: "my_directive",
@@ -131,7 +153,9 @@ func TestParse(t *testing.T) {
 						Fields: []parse.Node{
 							parse.FieldNode{
 								Name: "query",
-								Type: "Query",
+								Type: parse.TypeNode{
+									Name: "Query",
+								},
 							},
 						},
 					},
@@ -141,14 +165,16 @@ func TestParse(t *testing.T) {
 		"requiredArray.graphqls": {
 			expectedAST: parse.DocumentNode{
 				Definitions: []parse.Node{
-					parse.TypeNode{
+					parse.TypeDefNode{
 						Name: "Query",
 						Fields: []parse.Node{
 							parse.FieldNode{
-								Name:     "ping",
-								Type:     "String",
-								Multiple: true,
-								Required: true,
+								Name: "ping",
+								Type: parse.TypeNode{
+									Name:     "String",
+									Multiple: true,
+									Required: true,
+								},
 							},
 						},
 					},
@@ -156,7 +182,9 @@ func TestParse(t *testing.T) {
 						Fields: []parse.Node{
 							parse.FieldNode{
 								Name: "query",
-								Type: "Query",
+								Type: parse.TypeNode{
+									Name: "Query",
+								},
 							},
 						},
 					},
@@ -166,13 +194,15 @@ func TestParse(t *testing.T) {
 		"array.graphqls": {
 			expectedAST: parse.DocumentNode{
 				Definitions: []parse.Node{
-					parse.TypeNode{
+					parse.TypeDefNode{
 						Name: "Query",
 						Fields: []parse.Node{
 							parse.FieldNode{
-								Name:     "ping",
-								Type:     "String",
-								Multiple: true,
+								Name: "ping",
+								Type: parse.TypeNode{
+									Name:     "String",
+									Multiple: true,
+								},
 							},
 						},
 					},
@@ -180,7 +210,9 @@ func TestParse(t *testing.T) {
 						Fields: []parse.Node{
 							parse.FieldNode{
 								Name: "query",
-								Type: "Query",
+								Type: parse.TypeNode{
+									Name: "Query",
+								},
 							},
 						},
 					},
@@ -190,12 +222,14 @@ func TestParse(t *testing.T) {
 		"ping.graphqls": {
 			expectedAST: parse.DocumentNode{
 				Definitions: []parse.Node{
-					parse.TypeNode{
+					parse.TypeDefNode{
 						Name: "Query",
 						Fields: []parse.Node{
 							parse.FieldNode{
 								Name: "ping",
-								Type: "String",
+								Type: parse.TypeNode{
+									Name: "String",
+								},
 							},
 						},
 					},
@@ -203,7 +237,9 @@ func TestParse(t *testing.T) {
 						Fields: []parse.Node{
 							parse.FieldNode{
 								Name: "query",
-								Type: "Query",
+								Type: parse.TypeNode{
+									Name: "Query",
+								},
 							},
 						},
 					},
