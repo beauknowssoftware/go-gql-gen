@@ -5,7 +5,7 @@ import (
 
 	"github.com/google/go-cmp/cmp/cmpopts"
 
-	"github.com/beauknowssoftware/graphqlgen/internal/parse"
+	"github.com/beauknowssoftware/go-gql-gen/internal/parse"
 	"github.com/google/go-cmp/cmp"
 )
 

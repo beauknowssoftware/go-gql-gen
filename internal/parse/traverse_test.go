@@ -5,7 +5,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 
-	"github.com/beauknowssoftware/graphqlgen/internal/parse"
+	"github.com/beauknowssoftware/go-gql-gen/internal/parse"
 )
 
 func TestTraverse(t *testing.T) {
