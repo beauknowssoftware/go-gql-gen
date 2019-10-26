@@ -7,3 +7,16 @@ type MyTypeInput struct {
 	OtherID ID `json:"otherId"`
 	Name string `json:"name"`
 }
+
+type Other struct {
+	Name int `json:"name"`
+}
+
+type MyType struct {
+	ID ID `json:"id"`
+	MyID ID `json:"myId"`
+	Name string `json:"name"`
+	Names []string `json:"names"`
+	OtherLink
+	Others []Other `json:"others"`
+}

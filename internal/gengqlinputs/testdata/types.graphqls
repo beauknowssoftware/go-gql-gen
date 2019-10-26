@@ -7,7 +7,7 @@ type MyType {
   myId: ID
   name: String
   names: [String]
-  other: Other
+  other: Other @resolve
   others: [Other]
 }
 
