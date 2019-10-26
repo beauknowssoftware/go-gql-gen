@@ -162,6 +162,36 @@ func TestParse(t *testing.T) {
 				},
 			},
 		},
+		"fullyRequiredArray.graphqls": {
+			expectedAST: parse.DocumentNode{
+				Definitions: []parse.Node{
+					parse.TypeDefNode{
+						Name: "Query",
+						Fields: []parse.Node{
+							parse.FieldNode{
+								Name: "ping",
+								Type: parse.TypeNode{
+									Name:            "String",
+									Multiple:        true,
+									Required:        true,
+									NonNullElements: true,
+								},
+							},
+						},
+					},
+					parse.SchemaNode{
+						Fields: []parse.Node{
+							parse.FieldNode{
+								Name: "query",
+								Type: parse.TypeNode{
+									Name: "Query",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
 		"requiredArrayElement.graphqls": {
 			expectedAST: parse.DocumentNode{
 				Definitions: []parse.Node{
