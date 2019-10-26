@@ -1,5 +1,5 @@
 type Role {
-    tenant: Tenant
+    tenant: Tenant @resolve
     id: ID
     name: String
 }
@@ -7,7 +7,7 @@ type Role {
 type Tenant {
     id: ID
     name: String
-    roles(after: String, count: Int): RolesConnection
+    roles(after: String, count: Int): RolesConnection @resolve
 }
 
 type User {
@@ -15,8 +15,8 @@ type User {
 }
 
 type TenantUser {
-    user: User
-    role: Role
+    user: User @resolve
+    role: Role @resolve
 }
 
 type RolesConnection {
@@ -24,7 +24,7 @@ type RolesConnection {
 }
 
 type RoleEdge {
-    node: Role
+    node: Role @resolve
     cursor: String
 }
 
@@ -33,7 +33,7 @@ type TenantsConnection {
 }
 
 type TenantEdge {
-    node: Tenant
+    node: Tenant @resolve
     cursor: String
 }
 
@@ -43,7 +43,7 @@ input SaveTenantInput {
 }
 
 type SaveTenantPayload {
-    tenant: Tenant
+    tenant: Tenant @resolve
     query: Query
 }
 
@@ -52,7 +52,7 @@ input SaveGlobalAdminInput {
 }
 
 type SaveGlobalAdminPayload {
-    user: User @aws_api_key
+    user: User @aws_api_key @resolve
     query: Query
 }
 
@@ -64,7 +64,7 @@ input SaveTenantUserInput {
 
 type SaveTenantUserPayload {
     error: String
-    tenantUser: TenantUser
+    tenantUser: TenantUser @resolve
     query: Query
 }
 
@@ -76,7 +76,7 @@ input SaveRoleInput {
 
 type SaveRolePayload {
     error: String
-    role: Role
+    role: Role @resolve
     query: Query
 }
 
