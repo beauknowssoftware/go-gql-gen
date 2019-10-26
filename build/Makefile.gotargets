@@ -71,4 +71,3 @@ build-code: build-vendor-tools build-cmds
 unit-test: bin/gotestsum
 	$(call trace,executing unit tests)
 	$(call test,unit,internal)
-	$(call test,unit,cmd)
