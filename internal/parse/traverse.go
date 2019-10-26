@@ -47,23 +47,9 @@ func Traverse(ast Node, op func(Node) bool) {
 	for s.len() > 0 {
 		n := s.pop()
 		if op(n) {
-			switch n := n.(type) {
-			case DocumentNode:
-				for i := len(n.Definitions) - 1; i >= 0; i-- {
-					s.push(n.Definitions[i])
-				}
-			case *TypeNode:
-				for i := len(n.Fields) - 1; i >= 0; i-- {
-					s.push(n.Fields[i])
-				}
-			case *SchemaNode:
-				for i := len(n.Fields) - 1; i >= 0; i-- {
-					s.push(n.Fields[i])
-				}
-			case FieldNode:
-				for i := len(n.Params) - 1; i >= 0; i-- {
-					s.push(n.Params[i])
-				}
+			children := n.Children()
+			for i := len(children) - 1; i >= 0; i-- {
+				s.push(children[i])
 			}
 		}
 	}

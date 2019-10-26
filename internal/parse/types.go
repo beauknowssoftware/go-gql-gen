@@ -4,50 +4,6 @@ import (
 	"fmt"
 )
 
-type Node interface {
-	Kind() string
-}
-
-type DocumentNode struct {
-	Definitions []DefinitionNode
-}
-
-func (n DocumentNode) Kind() string { return "document" }
-
-type DefinitionNode interface {
-	Node
-}
-
-type TypeNode struct {
-	Name   string
-	Fields []FieldNode
-}
-
-func (n TypeNode) Kind() string { return "type" }
-
-type SchemaNode struct {
-	Fields []FieldNode
-}
-
-func (n SchemaNode) Kind() string { return "schema" }
-
-type FieldNode struct {
-	Name     string
-	Type     string
-	Required bool
-	Params   []ParamNode
-}
-
-func (n FieldNode) Kind() string { return "field" }
-
-type ParamNode struct {
-	Name     string
-	Type     string
-	Required bool
-}
-
-func (n ParamNode) Kind() string { return "param" }
-
 type TokenType int
 
 const (
