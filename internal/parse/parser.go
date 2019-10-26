@@ -6,25 +6,30 @@ import (
 )
 
 type Parser struct {
-	l       Lexer
-	c       chan Token
-	current Token
+	l      Lexer
+	tokens []Token
+	i      int
 }
 
 func New(l Lexer) Parser {
-	c := make(chan Token)
-	return Parser{l: l, c: c}
+	return Parser{l: l}
+}
+
+func (p *Parser) current() Token {
+	return p.tokens[p.i]
 }
 
 func (p *Parser) consume() {
-	p.current = <-p.c
-	for p.current.TokenType == WhitespaceToken {
-		p.current = <-p.c
+	if p.i < len(p.tokens)-1 {
+		p.i++
+		for p.current().TokenType == WhitespaceToken {
+			p.i++
+		}
 	}
 }
 
 func (p Parser) nodeLoc() NodeLoc {
-	return NodeLoc{p.current.Loc}
+	return NodeLoc{p.current().Loc}
 }
 
 type parserPart func(*Parser) (Node, error)
@@ -37,8 +42,8 @@ func keyword(v string) parserPart {
 	return func(p *Parser) (Node, error) {
 		nodeLoc := p.nodeLoc()
 
-		if p.current.TokenType != TextToken || p.current.Value != v {
-			return nil, fmt.Errorf("expected keyword %v keyword got %v (%v) token", v, p.current.TokenType, p.current.Value)
+		if p.current().TokenType != TextToken || p.current().Value != v {
+			return nil, fmt.Errorf("expected keyword %v keyword got %v (%v) token", v, p.current().TokenType, p.current().Value)
 		}
 		p.consume()
 
@@ -50,10 +55,10 @@ func token(tt TokenType) parserPart {
 	return func(p *Parser) (Node, error) {
 		nodeLoc := p.nodeLoc()
 
-		if p.current.TokenType != tt {
-			return nil, fmt.Errorf("expected %v token got %v token", tt, p.current.TokenType)
+		if p.current().TokenType != tt {
+			return nil, fmt.Errorf("expected %v token got %v token", tt, p.current().TokenType)
 		}
-		t := p.current
+		t := p.current()
 		p.consume()
 
 		return TokenNode{nodeLoc, tt, t.Value}, nil
@@ -256,12 +261,15 @@ type Error struct {
 }
 
 func (p *Parser) Parse() (Node, *Error) {
-	go p.l.Lex(p.c)
+	c := make(chan Token)
+	go p.l.Lex(c)
+	for t := range c {
+		p.tokens = append(p.tokens, t)
+	}
 
-	p.consume()
 	d, err := parseDocument(p)
 	if err != nil {
-		return nil, &Error{err, p.current}
+		return nil, &Error{err, p.current()}
 	}
 	return d, nil
 }
