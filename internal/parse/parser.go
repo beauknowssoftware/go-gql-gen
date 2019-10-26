@@ -71,9 +71,12 @@ func (p *Parser) parseParam() (*ParamNode, error) {
 		return nil, err
 	}
 
+	required := p.maybeConsume(BangToken, "")
+
 	n := ParamNode{
-		Name: name.Value,
-		Type: typ.Value,
+		Name:     name.Value,
+		Type:     typ.Value,
+		Required: required,
 	}
 	return &n, nil
 }

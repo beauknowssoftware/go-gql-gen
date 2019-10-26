@@ -41,8 +41,9 @@ type FieldNode struct {
 func (n FieldNode) Kind() string { return "field" }
 
 type ParamNode struct {
-	Name string
-	Type string
+	Name     string
+	Type     string
+	Required bool
 }
 
 func (n ParamNode) Kind() string { return "param" }

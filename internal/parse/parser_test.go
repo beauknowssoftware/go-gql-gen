@@ -11,6 +11,41 @@ func TestParse(t *testing.T) {
 	tests := map[string]struct {
 		expectedAST parse.DocumentNode
 	}{
+		"requiredParams.graphqls": {
+			expectedAST: parse.DocumentNode{
+				Definitions: []parse.DefinitionNode{
+					&parse.TypeNode{
+						Name: "Query",
+						Fields: []parse.FieldNode{
+							{
+								Name: "ping",
+								Type: "String",
+								Params: []parse.ParamNode{
+									{
+										Name:     "a",
+										Type:     "Int",
+										Required: true,
+									},
+									{
+										Name:     "b",
+										Type:     "String",
+										Required: true,
+									},
+								},
+							},
+						},
+					},
+					&parse.SchemaNode{
+						Fields: []parse.FieldNode{
+							{
+								Name: "query",
+								Type: "Query",
+							},
+						},
+					},
+				},
+			},
+		},
 		"requiredFieldType.graphqls": {
 			expectedAST: parse.DocumentNode{
 				Definitions: []parse.DefinitionNode{
