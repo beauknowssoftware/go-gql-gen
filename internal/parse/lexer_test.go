@@ -536,6 +536,81 @@ func TestLex(t *testing.T) {
 				},
 			},
 		},
+		"input.graphqls": {
+			expectedTokens: []parse.Token{
+				{
+					TokenType: parse.TextToken,
+					Value:     "type",
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "Query",
+				},
+				{
+					TokenType: parse.LeftCurlyToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "ping",
+				},
+				{
+					TokenType: parse.ColonToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "String",
+				},
+				{
+					TokenType: parse.RightCurlyToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "input",
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "PingInput",
+				},
+				{
+					TokenType: parse.LeftCurlyToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "ping",
+				},
+				{
+					TokenType: parse.ColonToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "String",
+				},
+				{
+					TokenType: parse.RightCurlyToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "schema",
+				},
+				{
+					TokenType: parse.LeftCurlyToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "query",
+				},
+				{
+					TokenType: parse.ColonToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "Query",
+				},
+				{
+					TokenType: parse.RightCurlyToken,
+				},
+			},
+		},
 		"ping.graphqls": {
 			expectedTokens: []parse.Token{
 				{

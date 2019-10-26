@@ -1,0 +1,11 @@
+type Query {
+    ping: String
+}
+
+input PingInput {
+    ping: String
+}
+
+schema {
+    query: Query
+}
