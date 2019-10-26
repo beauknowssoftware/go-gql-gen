@@ -73,6 +73,7 @@ type FieldNode struct {
 	Required   bool
 	Params     []Node
 	Directives []Node
+	Multiple   bool
 }
 
 func (n FieldNode) Children() []Node {
