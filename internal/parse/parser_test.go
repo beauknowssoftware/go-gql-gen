@@ -325,3 +325,13 @@ func TestParse(t *testing.T) {
 		})
 	}
 }
+
+func TestParseComplex(t *testing.T) {
+	schema := parse.TestGetDoc(t, "complex.graphqls")
+	l := parse.NewLexer(schema)
+	p := parse.New(l)
+
+	if _, err := p.Parse(); err != nil {
+		t.Fatalf("failed to parse %v", err)
+	}
+}

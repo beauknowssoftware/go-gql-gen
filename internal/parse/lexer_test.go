@@ -610,7 +610,7 @@ func TestLex(t *testing.T) {
 	}
 }
 
-func TestComplex(t *testing.T) {
+func TestLexComplex(t *testing.T) {
 	schema := parse.TestGetDoc(t, "complex.graphqls")
 	l := parse.NewLexer(schema)
 
