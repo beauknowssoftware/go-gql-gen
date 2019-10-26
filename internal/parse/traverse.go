@@ -1,7 +1,5 @@
 package parse
 
-import "fmt"
-
 type traverseStack struct {
 	nodes []Node
 }
@@ -26,14 +24,12 @@ func (s traverseStack) tail() []Node {
 
 func (s *traverseStack) push(v Node) {
 	s.nodes = append(s.nodes, v)
-	fmt.Println(s.nodes)
 }
 
 func (s *traverseStack) pop() Node {
 	if s.len() > 0 {
 		n := s.head()
 		s.nodes = s.tail()
-		fmt.Println(s.nodes)
 		return n
 	}
 	return nil

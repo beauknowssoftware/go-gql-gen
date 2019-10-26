@@ -1,6 +1,7 @@
 package parse
 
 import (
+	"errors"
 	"fmt"
 )
 
@@ -35,22 +36,27 @@ func nothing(p *Parser) (Node, error) {
 func token(tt TokenType, v string) parserPart {
 	return func(p *Parser) (Node, error) {
 		nodeLoc := p.nodeLoc()
-		err := p.tryConsume(tt, v)
-		if err != nil {
-			return nil, err
+
+		if p.current.TokenType != tt || p.current.Value != v {
+			return nil, fmt.Errorf("expected %v (%v) token got %v (%v) token", tt, v, p.current.TokenType, p.current.Value)
 		}
-		return TokenNode{nodeLoc, tt,v}, nil
+		p.consume()
+
+		return TokenNode{nodeLoc, tt, v}, nil
 	}
 }
 
 func tokenType(tt TokenType) parserPart {
 	return func(p *Parser) (Node, error) {
 		nodeLoc := p.nodeLoc()
-		t, err := p.tryConsumeType(tt)
-		if err != nil {
-			return nil, err
+
+		if p.current.TokenType != tt {
+			return nil, fmt.Errorf("expected %v token got %v token", tt, p.current.TokenType)
 		}
-		return TokenNode{nodeLoc, tt,t.Value}, nil
+		t := p.current
+		p.consume()
+
+		return TokenNode{nodeLoc, tt, t.Value}, nil
 	}
 }
 
@@ -64,8 +70,10 @@ func maybe(pp parserPart) parserPart {
 	}
 }
 
-func seq(trans func(...Node) Node, pps ...parserPart) parserPart {
+func seq(trans func(NodeLoc, ...Node) Node, pps ...parserPart) parserPart {
 	return func(p *Parser) (Node, error) {
+		nodeLoc := p.nodeLoc()
+
 		nodes := make([]Node, len(pps), len(pps))
 
 		for i, pp := range pps {
@@ -76,13 +84,15 @@ func seq(trans func(...Node) Node, pps ...parserPart) parserPart {
 			nodes[i] = n
 		}
 
-		n := trans(nodes...)
+		n := trans(nodeLoc, nodes...)
 		return n, nil
 	}
 }
 
-func multi(trans func(...Node) Node, pp parserPart) parserPart {
+func multi(pp parserPart) parserPart {
 	return func(p *Parser) (Node, error) {
+		nodeLoc := p.nodeLoc()
+
 		nodes := make([]Node, 0)
 
 		for {
@@ -93,12 +103,41 @@ func multi(trans func(...Node) Node, pp parserPart) parserPart {
 			nodes = append(nodes, n)
 		}
 
-		n := trans(nodes...)
-		return n, nil
+		return MultiNode{nodeLoc, nodes}, nil
 	}
 }
 
-func choice(pps...parserPart) parserPart {
+func multiSep(pp parserPart, sep parserPart) parserPart {
+	maybeSep := maybe(sep)
+
+	return func(p *Parser) (Node, error) {
+		nodeLoc := p.nodeLoc()
+
+		nodes := make([]Node, 0)
+
+		n, err := pp(p)
+		if err != nil {
+			return MultiNode{nodeLoc, nodes}, nil
+		}
+		nodes = append(nodes, n)
+
+		for {
+			if n, _ := maybeSep(p); n == nil {
+				break
+			}
+
+			n, err := pp(p)
+			if err != nil {
+				return nil, err
+			}
+			nodes = append(nodes, n)
+		}
+
+		return MultiNode{nodeLoc, nodes}, nil
+	}
+}
+
+func choice(pps ...parserPart) parserPart {
 	return func(p *Parser) (Node, error) {
 		for _, pp := range pps {
 			n, err := pp(p)
@@ -110,248 +149,73 @@ func choice(pps...parserPart) parserPart {
 	}
 }
 
-func (p *Parser) tryConsumeType(tt TokenType) (*Token, error) {
-	if p.current.TokenType != tt {
-		return nil, fmt.Errorf("expected %v token got %v token", tt, p.current.TokenType)
+var parseParameter = seq(func(nodeLoc NodeLoc, nodes ...Node) Node {
+	return ParamNode{
+		nodeLoc,
+		nodes[0].(TokenNode).Value,
+		nodes[2].(TokenNode).Value,
+		nodes[3] != nil,
 	}
-	t := p.current
-	p.consume()
-	return &t, nil
-}
+}, identifier, token(ColonToken, ""), identifier, maybe(required))
 
-func (p *Parser) maybeConsume(tt TokenType, value string) bool {
-	if p.current.TokenType == tt && p.current.Value == value {
-		p.consume()
-		return true
-	}
-	return false
-}
+var parseParameterList = multiSep(parseParameter, token(CommaToken, ""))
 
-func (p *Parser) maybeConsumeType(tt TokenType) (Token, bool) {
-	if p.current.TokenType == tt {
-		t := p.current
-		p.consume()
-		return t, true
-	}
-	return p.current, false
-}
+var parseParameters = seq(func(nodeLoc NodeLoc, nodes ...Node) Node {
+	return nodes[1]
+}, token(LeftParenToken, ""), parseParameterList, token(RightParenToken, ""))
 
-func (p *Parser) tryConsume(tt TokenType, value string) error {
-	if p.current.TokenType != tt || p.current.Value != value {
-		return fmt.Errorf("expected %v (%v) token got %v (%v) token", tt, value, p.current.TokenType, p.current.Value)
-	}
-	p.consume()
-	return nil
-}
+var identifier = tokenType(TextToken)
+var required = token(BangToken, "")
 
-func (p *Parser) parseParam() (*ParamNode, error) {
-	name, error := p.tryConsumeType(TextToken)
-	if error != nil {
-		return nil, error
-	}
-
-	if err := p.tryConsume(ColonToken, ""); err != nil {
-		return nil, err
-	}
-
-	typ, err := p.tryConsumeType(TextToken)
-	if err != nil {
-		return nil, err
-	}
-
-	required := p.maybeConsume(BangToken, "")
-
-	n := ParamNode{
-		Name:     name.Value,
-		Type:     typ.Value,
-		Required: required,
-	}
-	return &n, nil
-}
-
-func (p *Parser) maybeParseParams() ([]Node, error) {
-	if !p.maybeConsume(LeftParenToken, "") {
-		return nil, nil
-	}
-
-	params := make([]Node, 0)
-
-	n, err := p.parseParam()
-	if err != nil {
-		return nil, err
-	}
-	params = append(params, *n)
-
-	for {
-		if !p.maybeConsume(CommaToken, "") {
-			break
-		}
-
-		n, err := p.parseParam()
-		if err != nil {
-			return nil, err
-		}
-		params = append(params, *n)
-	}
-
-	if err := p.tryConsume(RightParenToken, ""); err != nil {
-		return nil, err
-	}
-
-	return params, nil
-}
-
-func (p *Parser) maybeParseField() (*FieldNode, error) {
-	name, parsed := p.maybeConsumeType(TextToken)
-	if !parsed {
-		return nil, nil
-	}
-
-	params, err := p.maybeParseParams()
-	if err != nil {
-		return nil, err
-	}
-
-	if err := p.tryConsume(ColonToken, ""); err != nil {
-		return nil, err
-	}
-
-	typ, err := p.tryConsumeType(TextToken)
-	if err != nil {
-		return nil, err
-	}
-
-	required := p.maybeConsume(BangToken, "")
-
+var parseField = seq(func(nodeLoc NodeLoc, nodes ...Node) Node {
 	f := FieldNode{
-		Name:     name.Value,
-		Type:     typ.Value,
-		Params:   params,
-		Required: required,
+		nodeLoc,
+		nodes[0].(TokenNode).Value,
+		nodes[3].(TokenNode).Value,
+		nodes[4] != nil,
+		nil,
 	}
-	return &f, nil
-}
-
-func (p *Parser) parseFields() ([]Node, error) {
-	fields := make([]Node, 0)
-	for {
-		f, err := p.maybeParseField()
-		if err != nil {
-			return nil, err
-		}
-		if f == nil {
-			break
-		}
-		fields = append(fields, *f)
+	if nodes[1] != nil {
+		f.Params = nodes[1].(MultiNode).Nodes
 	}
-	return fields, nil
-}
+	return f
+}, identifier, maybe(parseParameters), token(ColonToken, ""), identifier, maybe(required))
 
-func (p *Parser) maybeParseSchema() (*SchemaNode, error) {
-	nodeLoc := p.nodeLoc()
+var schemaKeyword = token(TextToken, "schema")
 
-	if !p.maybeConsume(TextToken, "schema") {
-		return nil, nil
+var parseSchema = seq(func(nodeLoc NodeLoc, nodes ...Node) Node {
+	return SchemaNode{
+		nodeLoc,
+		nodes[2].(MultiNode).Nodes,
 	}
+}, schemaKeyword, token(LeftCurlyToken, ""), multi(parseField), token(RightCurlyToken, ""))
 
-	if err := p.tryConsume(LeftCurlyToken, ""); err != nil {
-		return nil, err
+var typeKeyword = token(TextToken, "type")
+
+var parseType = seq(func(nodeLoc NodeLoc, nodes ...Node) Node {
+	return TypeNode{
+		nodeLoc,
+		nodes[1].(TokenNode).Value,
+		nodes[3].(MultiNode).Nodes,
 	}
+}, typeKeyword, identifier, token(LeftCurlyToken, ""), multi(parseField), token(RightCurlyToken, ""))
 
-	fields, err := p.parseFields()
-	if err != nil {
-		return nil, err
-	}
+var parseDefinition = choice(parseType, parseSchema)
 
-	if err := p.tryConsume(RightCurlyToken, ""); err != nil {
-		return nil, err
-	}
-
-	return &SchemaNode{nodeLoc, fields}, nil
-}
-
-func (p *Parser) maybeParseType() (*TypeNode, error) {
-	nodeLoc := p.nodeLoc()
-
-	if !p.maybeConsume(TextToken, "type") {
-		return nil, nil
-	}
-
-	name, err := p.tryConsumeType(TextToken)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := p.tryConsume(LeftCurlyToken, ""); err != nil {
-		return nil, err
-	}
-
-	fields, err := p.parseFields()
-	if err != nil {
-		return nil, err
-	}
-
-	if err := p.tryConsume(RightCurlyToken, ""); err != nil {
-		return nil, err
-	}
-
-	return &TypeNode{nodeLoc, name.Value, fields}, nil
-}
-
-func (p *Parser) maybeParseDefinition() (DefinitionNode, error) {
-	t, err := p.maybeParseType()
-	if err != nil {
-		return nil, err
-	}
-	if t != nil {
-		return t, nil
-	}
-
-	s, err := p.maybeParseSchema()
-	if err != nil {
-		return nil, err
-	}
-	if s != nil {
-		return s, nil
-	}
-
-	return nil, nil
-}
-
-func (p *Parser) parseDefinitions() ([]Node, error) {
-	definitions := make([]Node, 0)
-	for {
-		d, err := p.maybeParseDefinition()
-		if err != nil {
-			return nil, err
-		}
-		if d == nil {
-			break
-		}
-		definitions = append(definitions, d)
-	}
-	return definitions, nil
-}
-
-func (p *Parser) parseDocument() (*DocumentNode, error) {
-	nodeLoc := p.nodeLoc()
-	definitions, err := p.parseDefinitions()
-	if err != nil {
-		return nil, err
-	}
-	return &DocumentNode{nodeLoc, definitions}, nil
-}
+var parseDocument = seq(func(nodeLoc NodeLoc, nodes ...Node) Node {
+	return DocumentNode{nodeLoc, nodes[0].(MultiNode).Nodes}
+}, multi(parseDefinition))
 
 type Error struct {
 	Error error
 	Token Token
 }
 
-func (p *Parser) Parse() (*DocumentNode, *Error) {
+func (p *Parser) Parse() (Node, *Error) {
 	go p.l.Lex(p.c)
 
 	p.consume()
-	d, err := p.parseDocument()
+	d, err := parseDocument(p)
 	if err != nil {
 		return nil, &Error{err, p.current}
 	}

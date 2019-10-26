@@ -26,6 +26,15 @@ func (n DocumentNode) Children() []Node {
 	return children
 }
 
+type MultiNode struct {
+	NodeLoc
+	Nodes []Node
+}
+
+func (n MultiNode) Children() []Node {
+	return n.Nodes
+}
+
 type DefinitionNode interface {
 	Node
 }
@@ -87,10 +96,9 @@ func (n ParamNode) Children() []Node {
 type TokenNode struct {
 	NodeLoc
 	TokenType TokenType
-	Value string
+	Value     string
 }
 
 func (n TokenNode) Children() []Node {
 	return nil
 }
-

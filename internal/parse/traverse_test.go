@@ -16,7 +16,7 @@ func TestTraverse(t *testing.T) {
 			expectedNodes: []parse.Node{
 				parse.DocumentNode{
 					Definitions: []parse.Node{
-						&parse.TypeNode{
+						parse.TypeNode{
 							Name: "Query",
 							Fields: []parse.Node{
 								parse.FieldNode{
@@ -35,7 +35,7 @@ func TestTraverse(t *testing.T) {
 								},
 							},
 						},
-						&parse.SchemaNode{
+						parse.SchemaNode{
 							Fields: []parse.Node{
 								parse.FieldNode{
 									Name: "query",
@@ -45,7 +45,7 @@ func TestTraverse(t *testing.T) {
 						},
 					},
 				},
-				&parse.TypeNode{
+				parse.TypeNode{
 					Name: "Query",
 					Fields: []parse.Node{
 						parse.FieldNode{
@@ -86,7 +86,7 @@ func TestTraverse(t *testing.T) {
 					Name: "b",
 					Type: "String",
 				},
-				&parse.SchemaNode{
+				parse.SchemaNode{
 					Fields: []parse.Node{
 						parse.FieldNode{
 							Name: "query",
@@ -104,7 +104,7 @@ func TestTraverse(t *testing.T) {
 			expectedNodes: []parse.Node{
 				parse.DocumentNode{
 					Definitions: []parse.Node{
-						&parse.TypeNode{
+						parse.TypeNode{
 							Name: "Query",
 							Fields: []parse.Node{
 								parse.FieldNode{
@@ -113,7 +113,7 @@ func TestTraverse(t *testing.T) {
 								},
 							},
 						},
-						&parse.SchemaNode{
+						parse.SchemaNode{
 							Fields: []parse.Node{
 								parse.FieldNode{
 									Name: "query",
@@ -123,7 +123,7 @@ func TestTraverse(t *testing.T) {
 						},
 					},
 				},
-				&parse.TypeNode{
+				parse.TypeNode{
 					Name: "Query",
 					Fields: []parse.Node{
 						parse.FieldNode{
@@ -136,7 +136,7 @@ func TestTraverse(t *testing.T) {
 					Name: "ping",
 					Type: "String",
 				},
-				&parse.SchemaNode{
+				parse.SchemaNode{
 					Fields: []parse.Node{
 						parse.FieldNode{
 							Name: "query",

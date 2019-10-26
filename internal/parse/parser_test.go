@@ -18,7 +18,7 @@ func TestParse(t *testing.T) {
 		"requiredParams.graphqls": {
 			expectedAST: parse.DocumentNode{
 				Definitions: []parse.Node{
-					&parse.TypeNode{
+					parse.TypeNode{
 						Name: "Query",
 						Fields: []parse.Node{
 							parse.FieldNode{
@@ -39,7 +39,7 @@ func TestParse(t *testing.T) {
 							},
 						},
 					},
-					&parse.SchemaNode{
+					parse.SchemaNode{
 						Fields: []parse.Node{
 							parse.FieldNode{
 								Name: "query",
@@ -53,7 +53,7 @@ func TestParse(t *testing.T) {
 		"requiredFieldType.graphqls": {
 			expectedAST: parse.DocumentNode{
 				Definitions: []parse.Node{
-					&parse.TypeNode{
+					parse.TypeNode{
 						Name: "Query",
 						Fields: []parse.Node{
 							parse.FieldNode{
@@ -63,7 +63,7 @@ func TestParse(t *testing.T) {
 							},
 						},
 					},
-					&parse.SchemaNode{
+					parse.SchemaNode{
 						Fields: []parse.Node{
 							parse.FieldNode{
 								Name: "query",
@@ -77,7 +77,7 @@ func TestParse(t *testing.T) {
 		"params.graphqls": {
 			expectedAST: parse.DocumentNode{
 				Definitions: []parse.Node{
-					&parse.TypeNode{
+					parse.TypeNode{
 						Name: "Query",
 						Fields: []parse.Node{
 							parse.FieldNode{
@@ -96,7 +96,7 @@ func TestParse(t *testing.T) {
 							},
 						},
 					},
-					&parse.SchemaNode{
+					parse.SchemaNode{
 						Fields: []parse.Node{
 							parse.FieldNode{
 								Name: "query",
@@ -110,7 +110,7 @@ func TestParse(t *testing.T) {
 		"ping.graphqls": {
 			expectedAST: parse.DocumentNode{
 				Definitions: []parse.Node{
-					&parse.TypeNode{
+					parse.TypeNode{
 						Name: "Query",
 						Fields: []parse.Node{
 							parse.FieldNode{
@@ -119,7 +119,7 @@ func TestParse(t *testing.T) {
 							},
 						},
 					},
-					&parse.SchemaNode{
+					parse.SchemaNode{
 						Fields: []parse.Node{
 							parse.FieldNode{
 								Name: "query",
@@ -144,7 +144,7 @@ func TestParse(t *testing.T) {
 				t.Fatalf("failed to parse: %v (%v)", err.Error, err.Token)
 			}
 
-			if diff := cmp.Diff(&test.expectedAST, ast, ignoreNodePosition); diff != "" {
+			if diff := cmp.Diff(test.expectedAST, ast, ignoreNodePosition); diff != "" {
 				t.Fatalf("mismatch (expected, got) %v", diff)
 			}
 		})

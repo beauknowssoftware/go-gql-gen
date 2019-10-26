@@ -23,12 +23,12 @@ func TestGetDoc(t *testing.T, filename string) string {
 	return string(fileData)
 }
 
-func TestParse(t *testing.T, schema string) DocumentNode {
+func TestParse(t *testing.T, schema string) Node {
 	l := NewLexer(schema)
 	p := New(l)
 	d, err := p.Parse()
 	if err != nil {
 		t.Fatalf("failed to parse %v", err)
 	}
-	return *d
+	return d
 }
