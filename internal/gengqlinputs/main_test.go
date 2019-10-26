@@ -1,4 +1,4 @@
-package main_test
+package gengqlinputs_test
 
 import (
 	"bytes"
