@@ -72,6 +72,8 @@ func Run() {
 					switch tn.Name {
 					case "String":
 						fmt.Print(" string")
+					case "Int":
+						fmt.Print(" int")
 					default:
 						if tn.Multiple {
 							fmt.Printf(" []%v", tn.Name)

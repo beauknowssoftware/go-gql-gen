@@ -6,6 +6,7 @@ type MyTypeInput struct {
 	ID ID `json:"id"`
 	OtherID ID `json:"otherId"`
 	Name string `json:"name"`
+	Count int `json:"count"`
 }
 
 type Other struct {

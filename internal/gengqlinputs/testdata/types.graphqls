@@ -18,6 +18,7 @@ input MyTypeInput {
    id: ID
    otherId: ID
    name: String
+   count: Int
 }
 
 type Query {
