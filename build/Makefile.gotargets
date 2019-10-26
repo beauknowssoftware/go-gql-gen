@@ -63,8 +63,8 @@ format-code: bin/goimports bin/golint
 	go fmt ./cmd/...
 	goimports -w internal
 	goimports -w cmd
-	golint ./internal/... | grep -v 'exported .* should have comment or be unexported' || true
-	golint ./cmd/... | grep -v 'exported .* should have comment or be unexported' || true
+	golint ./internal/... | grep -v 'exported .* should have comment.* or be unexported' || true
+	golint ./cmd/... | grep -v 'exported .* should have comment .* or be unexported' || true
 
 build-code: build-vendor-tools build-cmds
 
