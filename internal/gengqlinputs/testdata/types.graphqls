@@ -10,6 +10,8 @@ type MyType {
   other: Other @resolve
   parent: Other
   others: [Other]
+  pOthers(id: Int, name: String): OtherA @resolve
+  iOthers(input: MyTypeInput): OtherB @resolve
 }
 
 input MyTypeInput {

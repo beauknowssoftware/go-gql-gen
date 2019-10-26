@@ -20,4 +20,19 @@ type MyType struct {
 	OtherLink
 	Parent Other `json:"parent"`
 	Others []Other `json:"others"`
+	OtherALink
+	OtherBLink
+}
+
+type MyTypePOthersArgs struct {
+	ID int `json:"id"`
+	Name string `json:"name"`
+}
+
+type MyTypeIOthersArgs struct {
+	Input MyTypeInput `json:"input"`
+}
+
+type MutationSaveArgs struct {
+	ID ID `json:"id"`
 }
