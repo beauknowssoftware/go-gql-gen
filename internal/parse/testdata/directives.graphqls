@@ -1,0 +1,7 @@
+type Query {
+    ping: String @my_directive @another_directive
+}
+
+schema {
+    query: Query
+}

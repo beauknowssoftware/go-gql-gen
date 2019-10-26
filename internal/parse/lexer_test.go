@@ -410,7 +410,7 @@ func TestLex(t *testing.T) {
 				},
 			},
 		},
-		"directive.graphqls": {
+		"directives.graphqls": {
 			expectedTokens: []parse.Token{
 				{
 					TokenType: parse.TextToken,
@@ -440,6 +440,13 @@ func TestLex(t *testing.T) {
 				{
 					TokenType: parse.TextToken,
 					Value:     "my_directive",
+				},
+				{
+					TokenType: parse.AtToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "another_directive",
 				},
 				{
 					TokenType: parse.RightCurlyToken,

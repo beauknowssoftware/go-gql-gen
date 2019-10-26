@@ -107,6 +107,37 @@ func TestParse(t *testing.T) {
 				},
 			},
 		},
+		"directives.graphqls": {
+			expectedAST: parse.DocumentNode{
+				Definitions: []parse.Node{
+					parse.TypeNode{
+						Name: "Query",
+						Fields: []parse.Node{
+							parse.FieldNode{
+								Name: "ping",
+								Type: "String",
+								Directives: []parse.Node{
+									parse.DirectiveNode{
+										Name: "my_directive",
+									},
+									parse.DirectiveNode{
+										Name: "another_directive",
+									},
+								},
+							},
+						},
+					},
+					parse.SchemaNode{
+						Fields: []parse.Node{
+							parse.FieldNode{
+								Name: "query",
+								Type: "Query",
+							},
+						},
+					},
+				},
+			},
+		},
 		"ping.graphqls": {
 			expectedAST: parse.DocumentNode{
 				Definitions: []parse.Node{

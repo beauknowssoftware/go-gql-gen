@@ -167,6 +167,13 @@ var parseParameters = seq(func(nodeLoc NodeLoc, nodes ...Node) Node {
 var identifier = token(TextToken)
 var required = token(BangToken)
 
+var parseDirective = seq(func(nodeLoc NodeLoc, nodes ...Node) Node {
+	return DirectiveNode{
+		nodeLoc,
+		nodes[1].(TokenNode).Value,
+	}
+}, token(AtToken), identifier)
+
 var parseField = seq(func(nodeLoc NodeLoc, nodes ...Node) Node {
 	f := FieldNode{
 		nodeLoc,
@@ -174,12 +181,16 @@ var parseField = seq(func(nodeLoc NodeLoc, nodes ...Node) Node {
 		nodes[3].(TokenNode).Value,
 		nodes[4] != nil,
 		nil,
+		nil,
 	}
 	if nodes[1] != nil {
 		f.Params = nodes[1].(MultiNode).Nodes
 	}
+	if len(nodes[5].(MultiNode).Nodes) > 0 {
+		f.Directives = nodes[5].(MultiNode).Nodes
+	}
 	return f
-}, identifier, maybe(parseParameters), token(ColonToken), identifier, maybe(required))
+}, identifier, maybe(parseParameters), token(ColonToken), identifier, maybe(required), multi(parseDirective))
 
 var schemaKeyword = keyword("schema")
 

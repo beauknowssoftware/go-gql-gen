@@ -68,10 +68,11 @@ func (n SchemaNode) Children() []Node {
 
 type FieldNode struct {
 	NodeLoc
-	Name     string
-	Type     string
-	Required bool
-	Params   []Node
+	Name       string
+	Type       string
+	Required   bool
+	Params     []Node
+	Directives []Node
 }
 
 func (n FieldNode) Children() []Node {
@@ -90,6 +91,15 @@ type ParamNode struct {
 }
 
 func (n ParamNode) Children() []Node {
+	return nil
+}
+
+type DirectiveNode struct {
+	NodeLoc
+	Name string
+}
+
+func (n DirectiveNode) Children() []Node {
 	return nil
 }
 
