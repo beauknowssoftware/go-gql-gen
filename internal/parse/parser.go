@@ -174,18 +174,27 @@ var parseDirective = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
 	}, nil
 }, token(AtToken), identifier)
 
-var parseType = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
-	if (nodes[0] == nil) != (nodes[2] == nil) {
-		return nil, errors.New("mismatched array brackets")
-	}
-
+var parseArrayType = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
 	return TypeNode{
 		nodeLoc,
 		nodes[1].(TokenNode).Value,
-		nodes[3] != nil,
-		nodes[0] != nil,
+		nodes[4] != nil,
+		true,
+		nodes[2] != nil,
 	}, nil
-}, maybe(token(LeftBracketToken)), identifier, maybe(token(RightBracketToken)), maybe(required))
+}, token(LeftBracketToken), identifier, maybe(required), maybe(token(RightBracketToken)), maybe(required))
+
+var parseSingleType = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
+	return TypeNode{
+		nodeLoc,
+		nodes[0].(TokenNode).Value,
+		nodes[1] != nil,
+		false,
+		false,
+	}, nil
+}, identifier, maybe(required))
+
+var parseType = choice(parseArrayType, parseSingleType)
 
 var parseField = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
 	f := FieldNode{

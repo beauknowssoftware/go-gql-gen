@@ -85,9 +85,10 @@ func (n FieldNode) Children() []Node {
 
 type TypeNode struct {
 	NodeLoc
-	Name     string
-	Required bool
-	Multiple bool
+	Name            string
+	Required        bool
+	Multiple        bool
+	NonNullElements bool
 }
 
 func (n TypeNode) Children() []Node {
