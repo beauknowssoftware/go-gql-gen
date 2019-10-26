@@ -48,6 +48,9 @@ func main() {
 			parse.Traverse(tdn, func(n parse.Node) bool {
 				if fn, ok := n.(parse.FieldNode); ok {
 					tn := fn.Type.(parse.TypeNode)
+					if tn.Name == "Query" {
+						return false
+					}
 					fmt.Printf("  %v", strings.Title(fn.Name))
 					switch tn.Name {
 					case "String":
