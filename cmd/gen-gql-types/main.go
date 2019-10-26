@@ -56,7 +56,11 @@ func main() {
 					case "String":
 						fmt.Print(" string")
 					default:
-						fmt.Printf(" *%v", tn.Name)
+						if tn.Multiple {
+							fmt.Printf(" []%v", tn.Name)
+						} else {
+							fmt.Printf(" *%v", tn.Name)
+						}
 					}
 					fmt.Printf(" `json:\"%v\"`", fn.Name)
 					fmt.Println()
