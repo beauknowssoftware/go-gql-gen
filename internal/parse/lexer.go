@@ -9,52 +9,51 @@ import (
 type Lexer struct {
 	lines  []string
 	dSlice []rune
-	cl     int
-	cc     int
+	loc    Loc
 }
 
 func NewLexer(document string) Lexer {
 	lines := strings.Split(document, "\n")
 	dSlice := []rune(lines[0])
-	return Lexer{lines, dSlice, 0, 0}
+	return Lexer{lines: lines, dSlice: dSlice}
 }
 
 func (l Lexer) newToken(t TokenType, v string) Token {
-	return Token{t, l.cl, l.cc, v}
+	return Token{t, l.loc, v}
 }
 
 func (l Lexer) isLastLine() bool {
-	return l.cl >= len(l.lines)-1
+	return l.loc.Line >= len(l.lines)-1
 }
 
 func (l Lexer) isEndOfLine() bool {
-	return l.cc >= len(l.dSlice)
+	return l.loc.Column >= len(l.dSlice)
 }
 
 func (l *Lexer) checkNextLine() {
 	for l.isEndOfLine() && !l.isLastLine() {
-		l.cc = 0
-		l.cl++
-		l.dSlice = []rune(l.lines[l.cl])
+		l.loc.Column = 0
+		l.loc.Line++
+		l.dSlice = []rune(l.lines[l.loc.Line])
 	}
 }
 
 func (l *Lexer) increment() {
-	l.cc++
+	l.loc.Column++
 	l.checkNextLine()
 }
 
 func (l Lexer) currentRune() rune {
-	return l.dSlice[l.cc]
+	return l.dSlice[l.loc.Column]
 }
 
 func (l *Lexer) while(cond func(rune) bool) string {
-	start := l.cc
-	for !l.isEndOfLine() && cond(l.dSlice[l.cc]) {
-		l.cc++
+	start := l.loc.Column
+	for !l.isEndOfLine() && cond(l.dSlice[l.loc.Column]) {
+		l.loc.Column++
 	}
 
-	v := string(l.dSlice[start:l.cc])
+	v := string(l.dSlice[start:l.loc.Column])
 
 	l.checkNextLine()
 

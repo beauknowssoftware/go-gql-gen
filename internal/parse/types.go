@@ -6,6 +6,15 @@ import (
 
 type TokenType int
 
+type Loc struct {
+	Line   int
+	Column int
+}
+
+func (l Loc) String() string {
+	return string(l.Line) + "," + string(l.Column)
+}
+
 const (
 	ErrorToken TokenType = iota
 	TextToken
@@ -46,14 +55,13 @@ func (tt TokenType) String() string {
 
 type Token struct {
 	TokenType TokenType
-	Line      int
-	Column    int
+	Loc       Loc
 	Value     string
 }
 
 func (t Token) String() string {
 	if t.Value == "" {
-		return fmt.Sprintf("%v token @(%v,%v)", t.TokenType, t.Line, t.Column)
+		return fmt.Sprintf("%v token @(%v)", t.TokenType, t.Loc)
 	}
-	return fmt.Sprintf("%v token = %v @(%v,%v)", t.TokenType, t.Value, t.Line, t.Column)
+	return fmt.Sprintf("%v token = %v @(%v)", t.TokenType, t.Value, t.Loc)
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-var ignoreTokenPosition = cmpopts.IgnoreFields(parse.Token{}, "Line", "Column")
+var ignoreTokenPosition = cmpopts.IgnoreFields(parse.Token{}, "Loc")
 
 func TestLex(t *testing.T) {
 	tests := map[string]struct {
