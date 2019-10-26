@@ -51,13 +51,19 @@ func main() {
 					if tn.Name == "Query" {
 						return false
 					}
-					fmt.Printf("  %v", strings.Title(fn.Name))
+					if fn.Name == "id" {
+						fmt.Print("  ID")
+					} else {
+						fmt.Printf("  %v", strings.Title(fn.Name))
+					}
 					switch tn.Name {
 					case "String":
 						fmt.Print(" string")
 					default:
 						if tn.Multiple {
 							fmt.Printf(" []%v", tn.Name)
+						} else if tn.Name == "ID" {
+							fmt.Print(" ID")
 						} else {
 							fmt.Printf(" *%v", tn.Name)
 						}
