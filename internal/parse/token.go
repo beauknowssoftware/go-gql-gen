@@ -12,7 +12,7 @@ type Loc struct {
 }
 
 func (l Loc) String() string {
-	return string(l.Line) + "," + string(l.Column)
+	return fmt.Sprintf("%v,%v", l.Line+1, l.Column+1)
 }
 
 const (
@@ -26,6 +26,9 @@ const (
 	RightParenToken
 	CommaToken
 	BangToken
+	AtToken
+	LeftBracketToken
+	RightBracketToken
 )
 
 func (tt TokenType) String() string {
@@ -48,6 +51,12 @@ func (tt TokenType) String() string {
 		return "comma"
 	case BangToken:
 		return "bang"
+	case AtToken:
+		return "at"
+	case LeftBracketToken:
+		return "left bracket"
+	case RightBracketToken:
+		return "right bracket"
 	default:
 		return "unknown"
 	}

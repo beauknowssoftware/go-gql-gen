@@ -64,6 +64,10 @@ func (l Lexer) isDone() bool {
 	return l.isLastLine() && l.isEndOfLine()
 }
 
+func isText(r rune) bool {
+	return unicode.IsLetter(r) || r == '_'
+}
+
 func (l *Lexer) Lex(c chan Token) {
 	for !l.isDone() {
 		r := l.currentRune()
@@ -89,16 +93,25 @@ func (l *Lexer) Lex(c chan Token) {
 		case r == '!':
 			c <- l.newToken(BangToken, "", l.loc)
 			l.increment()
+		case r == '@':
+			c <- l.newToken(AtToken, "", l.loc)
+			l.increment()
+		case r == '[':
+			c <- l.newToken(LeftBracketToken, "", l.loc)
+			l.increment()
+		case r == ']':
+			c <- l.newToken(RightBracketToken, "", l.loc)
+			l.increment()
 		case unicode.IsSpace(r):
 			s := l.loc
 			w := l.while(unicode.IsSpace)
 			c <- l.newToken(WhitespaceToken, string(len(w)), s)
-		case unicode.IsLetter(r):
+		case isText(r):
 			s := l.loc
-			value := l.while(unicode.IsLetter)
+			value := l.while(isText)
 			c <- l.newToken(TextToken, value, s)
 		default:
-			c <- l.newToken(ErrorToken, fmt.Sprintf("unknown rune %v", r), l.loc)
+			c <- l.newToken(ErrorToken, fmt.Sprintf("unknown rune %v", string(r)), l.loc)
 			l.increment()
 		}
 	}

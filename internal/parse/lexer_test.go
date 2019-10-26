@@ -309,3 +309,17 @@ func TestLex(t *testing.T) {
 		})
 	}
 }
+
+func TestComplex(t *testing.T) {
+	schema := parse.TestGetDoc(t, "complex.graphqls")
+	l := parse.NewLexer(schema)
+
+	c := make(chan parse.Token)
+	go l.Lex(c)
+
+	for token := range c {
+		if token.TokenType == parse.ErrorToken {
+			t.Fatalf("got error token %v", token)
+		}
+	}
+}

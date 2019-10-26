@@ -1,0 +1,100 @@
+type Role {
+    tenant: Tenant
+    id: ID
+    name: String
+}
+
+type Tenant {
+    id: ID
+    name: String
+    roles(after: String, count: Int): RolesConnection
+}
+
+type User {
+    username: String @aws_api_key @aws_cognito_user_pools
+}
+
+type TenantUser {
+    user: User
+    role: Role
+}
+
+type RolesConnection {
+    edges: [RoleEdge]
+}
+
+type RoleEdge {
+    node: Role
+    cursor: String
+}
+
+type TenantsConnection {
+    edges: [TenantEdge]
+}
+
+type TenantEdge {
+    node: Tenant
+    cursor: String
+}
+
+input SaveTenantInput {
+    id: ID
+    name: String
+}
+
+type SaveTenantPayload {
+    tenant: Tenant
+    query: Query
+}
+
+input SaveGlobalAdminInput {
+    username: String!
+}
+
+type SaveGlobalAdminPayload {
+    user: User @aws_api_key
+    query: Query
+}
+
+input SaveTenantUserInput {
+    username: String!
+    tenantId: ID!
+    roleId: ID!
+}
+
+type SaveTenantUserPayload {
+    error: String
+    tenantUser: TenantUser
+    query: Query
+}
+
+input SaveRoleInput {
+    name: String!
+    tenantId: ID!
+    id: ID!
+}
+
+type SaveRolePayload {
+    error: String
+    role: Role
+    query: Query
+}
+
+type Query {
+    ping: String @aws_api_key
+    tenant(id: ID): Tenant
+    currentTenant: Tenant
+    tenants(after: String, count: Int): TenantsConnection
+}
+
+type Mutation {
+    saveTenant(input:SaveTenantInput!): SaveTenantPayload
+    saveGlobalAdmin(input: SaveGlobalAdminInput!): SaveGlobalAdminPayload @aws_api_key
+    saveTenantUser(input: SaveTenantUserInput!): SaveTenantUserPayload
+    saveRole(input: SaveRoleInput!): SaveRolePayload
+}
+
+schema {
+    query: Query
+    mutation: Mutation
+}
