@@ -22,8 +22,92 @@ func (p *Parser) consume() {
 	}
 }
 
-func (p Parser) nodeStart() NodeLoc {
+func (p Parser) nodeLoc() NodeLoc {
 	return NodeLoc{p.current.Loc}
+}
+
+type parserPart func(*Parser) (Node, error)
+
+func nothing(p *Parser) (Node, error) {
+	return nil, nil
+}
+
+func token(tt TokenType, v string) parserPart {
+	return func(p *Parser) (Node, error) {
+		nodeLoc := p.nodeLoc()
+		err := p.tryConsume(tt, v)
+		if err != nil {
+			return nil, err
+		}
+		return TokenNode{nodeLoc, tt,v}, nil
+	}
+}
+
+func tokenType(tt TokenType) parserPart {
+	return func(p *Parser) (Node, error) {
+		nodeLoc := p.nodeLoc()
+		t, err := p.tryConsumeType(tt)
+		if err != nil {
+			return nil, err
+		}
+		return TokenNode{nodeLoc, tt,t.Value}, nil
+	}
+}
+
+func maybe(pp parserPart) parserPart {
+	return func(p *Parser) (Node, error) {
+		n, err := pp(p)
+		if err != nil {
+			return nil, nil
+		}
+		return n, nil
+	}
+}
+
+func seq(trans func(...Node) Node, pps ...parserPart) parserPart {
+	return func(p *Parser) (Node, error) {
+		nodes := make([]Node, len(pps), len(pps))
+
+		for i, pp := range pps {
+			n, err := pp(p)
+			if err != nil {
+				return nil, err
+			}
+			nodes[i] = n
+		}
+
+		n := trans(nodes...)
+		return n, nil
+	}
+}
+
+func multi(trans func(...Node) Node, pp parserPart) parserPart {
+	return func(p *Parser) (Node, error) {
+		nodes := make([]Node, 0)
+
+		for {
+			n, err := pp(p)
+			if err != nil {
+				break
+			}
+			nodes = append(nodes, n)
+		}
+
+		n := trans(nodes...)
+		return n, nil
+	}
+}
+
+func choice(pps...parserPart) parserPart {
+	return func(p *Parser) (Node, error) {
+		for _, pp := range pps {
+			n, err := pp(p)
+			if err == nil {
+				return n, nil
+			}
+		}
+		return nil, errors.New("cannot match token")
+	}
 }
 
 func (p *Parser) tryConsumeType(tt TokenType) (*Token, error) {
@@ -164,7 +248,7 @@ func (p *Parser) parseFields() ([]Node, error) {
 }
 
 func (p *Parser) maybeParseSchema() (*SchemaNode, error) {
-	nodeLoc := p.nodeStart()
+	nodeLoc := p.nodeLoc()
 
 	if !p.maybeConsume(TextToken, "schema") {
 		return nil, nil
@@ -187,7 +271,7 @@ func (p *Parser) maybeParseSchema() (*SchemaNode, error) {
 }
 
 func (p *Parser) maybeParseType() (*TypeNode, error) {
-	nodeLoc := p.nodeStart()
+	nodeLoc := p.nodeLoc()
 
 	if !p.maybeConsume(TextToken, "type") {
 		return nil, nil
@@ -250,7 +334,7 @@ func (p *Parser) parseDefinitions() ([]Node, error) {
 }
 
 func (p *Parser) parseDocument() (*DocumentNode, error) {
-	nodeLoc := p.nodeStart()
+	nodeLoc := p.nodeLoc()
 	definitions, err := p.parseDefinitions()
 	if err != nil {
 		return nil, err

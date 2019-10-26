@@ -83,3 +83,14 @@ type ParamNode struct {
 func (n ParamNode) Children() []Node {
 	return nil
 }
+
+type TokenNode struct {
+	NodeLoc
+	TokenType TokenType
+	Value string
+}
+
+func (n TokenNode) Children() []Node {
+	return nil
+}
+
