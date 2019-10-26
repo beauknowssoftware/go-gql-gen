@@ -15,6 +15,93 @@ func TestLex(t *testing.T) {
 	tests := map[string]struct {
 		expectedTokens []parse.Token
 	}{
+		"requiredParams.graphqls": {
+			expectedTokens: []parse.Token{
+				{
+					TokenType: parse.TextToken,
+					Value:     "type",
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "Query",
+				},
+				{
+					TokenType: parse.LeftCurlyToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "ping",
+				},
+				{
+					TokenType: parse.LeftParenToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "a",
+				},
+				{
+					TokenType: parse.ColonToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "Int",
+				},
+				{
+					TokenType: parse.BangToken,
+				},
+				{
+					TokenType: parse.CommaToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "b",
+				},
+				{
+					TokenType: parse.ColonToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "String",
+				},
+				{
+					TokenType: parse.BangToken,
+				},
+				{
+					TokenType: parse.RightParenToken,
+				},
+				{
+					TokenType: parse.ColonToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "String",
+				},
+				{
+					TokenType: parse.RightCurlyToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "schema",
+				},
+				{
+					TokenType: parse.LeftCurlyToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "query",
+				},
+				{
+					TokenType: parse.ColonToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value:     "Query",
+				},
+				{
+					TokenType: parse.RightCurlyToken,
+				},
+			},
+		},
 		"requiredFieldType.graphqls": {
 			expectedTokens: []parse.Token{
 				{
