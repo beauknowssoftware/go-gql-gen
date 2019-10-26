@@ -81,12 +81,12 @@ func (p *Parser) parseParam() (*ParamNode, error) {
 	return &n, nil
 }
 
-func (p *Parser) maybeParseParams() ([]ParamNode, error) {
+func (p *Parser) maybeParseParams() ([]Node, error) {
 	if !p.maybeConsume(LeftParenToken, "") {
 		return nil, nil
 	}
 
-	params := make([]ParamNode, 0)
+	params := make([]Node, 0)
 
 	n, err := p.parseParam()
 	if err != nil {
@@ -144,8 +144,8 @@ func (p *Parser) maybeParseField() (*FieldNode, error) {
 	return &f, nil
 }
 
-func (p *Parser) parseFields() ([]FieldNode, error) {
-	fields := make([]FieldNode, 0)
+func (p *Parser) parseFields() ([]Node, error) {
+	fields := make([]Node, 0)
 	for {
 		f, err := p.maybeParseField()
 		if err != nil {
@@ -226,8 +226,8 @@ func (p *Parser) maybeParseDefinition() (DefinitionNode, error) {
 	return nil, nil
 }
 
-func (p *Parser) parseDefinitions() ([]DefinitionNode, error) {
-	definitions := make([]DefinitionNode, 0)
+func (p *Parser) parseDefinitions() ([]Node, error) {
+	definitions := make([]Node, 0)
 	for {
 		d, err := p.maybeParseDefinition()
 		if err != nil {

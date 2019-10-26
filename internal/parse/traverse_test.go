@@ -15,19 +15,19 @@ func TestTraverse(t *testing.T) {
 		"params.graphqls": {
 			expectedNodes: []parse.Node{
 				parse.DocumentNode{
-					Definitions: []parse.DefinitionNode{
+					Definitions: []parse.Node{
 						&parse.TypeNode{
 							Name: "Query",
-							Fields: []parse.FieldNode{
-								{
+							Fields: []parse.Node{
+								parse.FieldNode{
 									Name: "ping",
 									Type: "String",
-									Params: []parse.ParamNode{
-										{
+									Params: []parse.Node{
+										parse.ParamNode{
 											Name: "a",
 											Type: "Int",
 										},
-										{
+										parse.ParamNode{
 											Name: "b",
 											Type: "String",
 										},
@@ -36,8 +36,8 @@ func TestTraverse(t *testing.T) {
 							},
 						},
 						&parse.SchemaNode{
-							Fields: []parse.FieldNode{
-								{
+							Fields: []parse.Node{
+								parse.FieldNode{
 									Name: "query",
 									Type: "Query",
 								},
@@ -47,16 +47,16 @@ func TestTraverse(t *testing.T) {
 				},
 				&parse.TypeNode{
 					Name: "Query",
-					Fields: []parse.FieldNode{
-						{
+					Fields: []parse.Node{
+						parse.FieldNode{
 							Name: "ping",
 							Type: "String",
-							Params: []parse.ParamNode{
-								{
+							Params: []parse.Node{
+								parse.ParamNode{
 									Name: "a",
 									Type: "Int",
 								},
-								{
+								parse.ParamNode{
 									Name: "b",
 									Type: "String",
 								},
@@ -67,12 +67,12 @@ func TestTraverse(t *testing.T) {
 				parse.FieldNode{
 					Name: "ping",
 					Type: "String",
-					Params: []parse.ParamNode{
-						{
+					Params: []parse.Node{
+						parse.ParamNode{
 							Name: "a",
 							Type: "Int",
 						},
-						{
+						parse.ParamNode{
 							Name: "b",
 							Type: "String",
 						},
@@ -87,8 +87,8 @@ func TestTraverse(t *testing.T) {
 					Type: "String",
 				},
 				&parse.SchemaNode{
-					Fields: []parse.FieldNode{
-						{
+					Fields: []parse.Node{
+						parse.FieldNode{
 							Name: "query",
 							Type: "Query",
 						},
@@ -103,19 +103,19 @@ func TestTraverse(t *testing.T) {
 		"ping.graphqls": {
 			expectedNodes: []parse.Node{
 				parse.DocumentNode{
-					Definitions: []parse.DefinitionNode{
+					Definitions: []parse.Node{
 						&parse.TypeNode{
 							Name: "Query",
-							Fields: []parse.FieldNode{
-								{
+							Fields: []parse.Node{
+								parse.FieldNode{
 									Name: "ping",
 									Type: "String",
 								},
 							},
 						},
 						&parse.SchemaNode{
-							Fields: []parse.FieldNode{
-								{
+							Fields: []parse.Node{
+								parse.FieldNode{
 									Name: "query",
 									Type: "Query",
 								},
@@ -125,8 +125,8 @@ func TestTraverse(t *testing.T) {
 				},
 				&parse.TypeNode{
 					Name: "Query",
-					Fields: []parse.FieldNode{
-						{
+					Fields: []parse.Node{
+						parse.FieldNode{
 							Name: "ping",
 							Type: "String",
 						},
@@ -137,8 +137,8 @@ func TestTraverse(t *testing.T) {
 					Type: "String",
 				},
 				&parse.SchemaNode{
-					Fields: []parse.FieldNode{
-						{
+					Fields: []parse.Node{
+						parse.FieldNode{
 							Name: "query",
 							Type: "Query",
 						},

@@ -5,7 +5,7 @@ type Node interface {
 }
 
 type DocumentNode struct {
-	Definitions []DefinitionNode
+	Definitions []Node
 }
 
 func (n DocumentNode) Children() []Node {
@@ -22,7 +22,7 @@ type DefinitionNode interface {
 
 type TypeNode struct {
 	Name   string
-	Fields []FieldNode
+	Fields []Node
 }
 
 func (n TypeNode) Children() []Node {
@@ -34,7 +34,7 @@ func (n TypeNode) Children() []Node {
 }
 
 type SchemaNode struct {
-	Fields []FieldNode
+	Fields []Node
 }
 
 func (n SchemaNode) Children() []Node {
@@ -49,7 +49,7 @@ type FieldNode struct {
 	Name     string
 	Type     string
 	Required bool
-	Params   []ParamNode
+	Params   []Node
 }
 
 func (n FieldNode) Children() []Node {
