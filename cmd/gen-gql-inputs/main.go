@@ -38,7 +38,8 @@ func main() {
 	}
 
 	fmt.Printf("package %v\n\n", pkg)
-	fmt.Println("type ID string\n")
+	fmt.Println("type ID string")
+	fmt.Println()
 	parse.Traverse(rnode, func(n parse.Node) bool {
 		if tdn, ok := n.(parse.TypeDefNode); ok {
 			if !tdn.Input {
@@ -77,7 +78,8 @@ func main() {
 				}
 				return true
 			})
-			fmt.Println("}\n")
+			fmt.Println("}")
+			fmt.Println()
 			return false
 		}
 		return true

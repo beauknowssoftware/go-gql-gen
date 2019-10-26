@@ -38,12 +38,13 @@ func main() {
 	}
 
 	fmt.Printf("package %v\n\n", pkg)
-	fmt.Println("type ID string\n")
+	fmt.Println("type ID string")
 	parse.Traverse(rnode, func(n parse.Node) bool {
 		if tdn, ok := n.(parse.TypeDefNode); ok {
 			if tdn.Input || tdn.Name == "Mutation" || tdn.Name == "Query" {
 				return false
 			}
+			fmt.Println()
 			fmt.Printf("type %v struct {\n", tdn.Name)
 			parse.Traverse(tdn, func(n parse.Node) bool {
 				if fn, ok := n.(parse.FieldNode); ok {
@@ -53,20 +54,30 @@ func main() {
 					}
 					if strings.HasSuffix(fn.Name, "Id") {
 						prefix := strings.TrimSuffix(fn.Name, "Id")
-						fmt.Printf("  %vID", strings.Title(prefix))
+						fmt.Printf("\t%vID", strings.Title(prefix))
 					} else if fn.Name == "id" {
-						fmt.Print("  ID")
+						fmt.Print("\tID")
 					} else {
-						fmt.Printf("  %v", strings.Title(fn.Name))
+						fmt.Printf("\t%v", strings.Title(fn.Name))
 					}
 					switch tn.Name {
 					case "String":
-						fmt.Print(" string")
+						if tn.Multiple {
+							fmt.Print(" []string")
+						} else {
+							fmt.Print(" string")
+						}
+					case "Int":
+						if tn.Multiple {
+							fmt.Print(" []int")
+						} else {
+							fmt.Print(" int")
+						}
+					case "ID":
+						fmt.Print(" ID")
 					default:
 						if tn.Multiple {
 							fmt.Printf(" []%v", tn.Name)
-						} else if tn.Name == "ID" {
-							fmt.Print(" ID")
 						} else {
 							fmt.Printf(" *%v", tn.Name)
 						}
@@ -77,7 +88,7 @@ func main() {
 				}
 				return true
 			})
-			fmt.Println("}\n")
+			fmt.Println("}")
 			return false
 		}
 		return true
