@@ -43,6 +43,7 @@ type TypeDefNode struct {
 	NodeLoc
 	Name   string
 	Fields []Node
+	Input  bool
 }
 
 func (n TypeDefNode) Children() []Node {

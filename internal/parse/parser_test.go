@@ -278,6 +278,45 @@ func TestParse(t *testing.T) {
 				},
 			},
 		},
+		"input.graphqls": {
+			expectedAST: parse.DocumentNode{
+				Definitions: []parse.Node{
+					parse.TypeDefNode{
+						Name: "Query",
+						Fields: []parse.Node{
+							parse.FieldNode{
+								Name: "ping",
+								Type: parse.TypeNode{
+									Name: "String",
+								},
+							},
+						},
+					},
+					parse.TypeDefNode{
+						Name:  "PingInput",
+						Input: true,
+						Fields: []parse.Node{
+							parse.FieldNode{
+								Name: "ping",
+								Type: parse.TypeNode{
+									Name: "String",
+								},
+							},
+						},
+					},
+					parse.SchemaNode{
+						Fields: []parse.Node{
+							parse.FieldNode{
+								Name: "query",
+								Type: parse.TypeNode{
+									Name: "Query",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
 		"ping.graphqls": {
 			expectedAST: parse.DocumentNode{
 				Definitions: []parse.Node{

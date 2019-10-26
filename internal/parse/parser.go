@@ -229,10 +229,22 @@ var parseTypeDef = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
 		nodeLoc,
 		nodes[1].(TokenNode).Value,
 		nodes[3].(MultiNode).Nodes,
+		false,
 	}, nil
 }, typeKeyword, identifier, token(LeftCurlyToken), multi(parseField), token(RightCurlyToken))
 
-var parseDefinition = choice(parseTypeDef, parseSchema)
+var inputKeyword = keyword("input")
+
+var parseInput = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
+	return TypeDefNode{
+		nodeLoc,
+		nodes[1].(TokenNode).Value,
+		nodes[3].(MultiNode).Nodes,
+		true,
+	}, nil
+}, inputKeyword, identifier, token(LeftCurlyToken), multi(parseField), token(RightCurlyToken))
+
+var parseDefinition = choice(parseTypeDef, parseInput, parseSchema)
 
 var parseDocument = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
 	return DocumentNode{nodeLoc, nodes[0].(MultiNode).Nodes}, nil
