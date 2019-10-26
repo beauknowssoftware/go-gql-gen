@@ -61,7 +61,7 @@ type Token struct {
 
 func (t Token) String() string {
 	if t.Value == "" {
-		return fmt.Sprintf("%v token @(%v)", t.TokenType, t.Loc)
+		return fmt.Sprintf("%v keyword @(%v)", t.TokenType, t.Loc)
 	}
-	return fmt.Sprintf("%v token = %v @(%v)", t.TokenType, t.Value, t.Loc)
+	return fmt.Sprintf("%v keyword = %v @(%v)", t.TokenType, t.Value, t.Loc)
 }

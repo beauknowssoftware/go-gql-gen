@@ -33,20 +33,20 @@ func nothing(p *Parser) (Node, error) {
 	return nil, nil
 }
 
-func token(tt TokenType, v string) parserPart {
+func keyword(v string) parserPart {
 	return func(p *Parser) (Node, error) {
 		nodeLoc := p.nodeLoc()
 
-		if p.current.TokenType != tt || p.current.Value != v {
-			return nil, fmt.Errorf("expected %v (%v) token got %v (%v) token", tt, v, p.current.TokenType, p.current.Value)
+		if p.current.TokenType != TextToken || p.current.Value != v {
+			return nil, fmt.Errorf("expected keyword %v keyword got %v (%v) token", v, p.current.TokenType, p.current.Value)
 		}
 		p.consume()
 
-		return TokenNode{nodeLoc, tt, v}, nil
+		return TokenNode{nodeLoc, TextToken, v}, nil
 	}
 }
 
-func tokenType(tt TokenType) parserPart {
+func token(tt TokenType) parserPart {
 	return func(p *Parser) (Node, error) {
 		nodeLoc := p.nodeLoc()
 
@@ -145,7 +145,7 @@ func choice(pps ...parserPart) parserPart {
 				return n, nil
 			}
 		}
-		return nil, errors.New("cannot match token")
+		return nil, errors.New("cannot match keyword")
 	}
 }
 
@@ -156,16 +156,16 @@ var parseParameter = seq(func(nodeLoc NodeLoc, nodes ...Node) Node {
 		nodes[2].(TokenNode).Value,
 		nodes[3] != nil,
 	}
-}, identifier, token(ColonToken, ""), identifier, maybe(required))
+}, identifier, token(ColonToken), identifier, maybe(required))
 
-var parseParameterList = multiSep(parseParameter, token(CommaToken, ""))
+var parseParameterList = multiSep(parseParameter, token(CommaToken))
 
 var parseParameters = seq(func(nodeLoc NodeLoc, nodes ...Node) Node {
 	return nodes[1]
-}, token(LeftParenToken, ""), parseParameterList, token(RightParenToken, ""))
+}, token(LeftParenToken), parseParameterList, token(RightParenToken))
 
-var identifier = tokenType(TextToken)
-var required = token(BangToken, "")
+var identifier = token(TextToken)
+var required = token(BangToken)
 
 var parseField = seq(func(nodeLoc NodeLoc, nodes ...Node) Node {
 	f := FieldNode{
@@ -179,18 +179,18 @@ var parseField = seq(func(nodeLoc NodeLoc, nodes ...Node) Node {
 		f.Params = nodes[1].(MultiNode).Nodes
 	}
 	return f
-}, identifier, maybe(parseParameters), token(ColonToken, ""), identifier, maybe(required))
+}, identifier, maybe(parseParameters), token(ColonToken), identifier, maybe(required))
 
-var schemaKeyword = token(TextToken, "schema")
+var schemaKeyword = keyword("schema")
 
 var parseSchema = seq(func(nodeLoc NodeLoc, nodes ...Node) Node {
 	return SchemaNode{
 		nodeLoc,
 		nodes[2].(MultiNode).Nodes,
 	}
-}, schemaKeyword, token(LeftCurlyToken, ""), multi(parseField), token(RightCurlyToken, ""))
+}, schemaKeyword, token(LeftCurlyToken), multi(parseField), token(RightCurlyToken))
 
-var typeKeyword = token(TextToken, "type")
+var typeKeyword = keyword("type")
 
 var parseType = seq(func(nodeLoc NodeLoc, nodes ...Node) Node {
 	return TypeNode{
@@ -198,7 +198,7 @@ var parseType = seq(func(nodeLoc NodeLoc, nodes ...Node) Node {
 		nodes[1].(TokenNode).Value,
 		nodes[3].(MultiNode).Nodes,
 	}
-}, typeKeyword, identifier, token(LeftCurlyToken, ""), multi(parseField), token(RightCurlyToken, ""))
+}, typeKeyword, identifier, token(LeftCurlyToken), multi(parseField), token(RightCurlyToken))
 
 var parseDefinition = choice(parseType, parseSchema)
 
