@@ -130,10 +130,13 @@ func (p *Parser) maybeParseField() (*FieldNode, error) {
 		return nil, err
 	}
 
+	required := p.maybeConsume(BangToken, "")
+
 	f := FieldNode{
-		Name:   name.Value,
-		Type:   typ.Value,
-		Params: params,
+		Name:     name.Value,
+		Type:     typ.Value,
+		Params:   params,
+		Required: required,
 	}
 	return &f, nil
 }

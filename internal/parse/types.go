@@ -32,9 +32,10 @@ type SchemaNode struct {
 func (n SchemaNode) Kind() string { return "schema" }
 
 type FieldNode struct {
-	Name   string
-	Type   string
-	Params []ParamNode
+	Name     string
+	Type     string
+	Required bool
+	Params   []ParamNode
 }
 
 func (n FieldNode) Kind() string { return "field" }
