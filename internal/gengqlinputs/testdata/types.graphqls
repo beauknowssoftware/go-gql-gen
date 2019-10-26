@@ -8,6 +8,7 @@ type MyType {
   name: String
   names: [String]
   other: Other @resolve
+  parent: Other
   others: [Other]
 }
 

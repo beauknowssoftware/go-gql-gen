@@ -18,5 +18,6 @@ type MyType struct {
 	Name string `json:"name"`
 	Names []string `json:"names"`
 	OtherLink
+	Parent Other `json:"parent"`
 	Others []Other `json:"others"`
 }
