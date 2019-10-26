@@ -54,11 +54,11 @@ func main() {
 					}
 					if strings.HasSuffix(fn.Name, "Id") {
 						prefix := strings.TrimSuffix(fn.Name, "Id")
-						fmt.Printf("  %vID", strings.Title(prefix))
+						fmt.Printf("\t%vID", strings.Title(prefix))
 					} else if fn.Name == "id" {
-						fmt.Print("  ID")
+						fmt.Print("\tID")
 					} else {
-						fmt.Printf("  %v", strings.Title(fn.Name))
+						fmt.Printf("\t%v", strings.Title(fn.Name))
 					}
 					switch tn.Name {
 					case "String":
@@ -79,7 +79,6 @@ func main() {
 				return true
 			})
 			fmt.Println("}")
-			fmt.Println()
 			return false
 		}
 		return true

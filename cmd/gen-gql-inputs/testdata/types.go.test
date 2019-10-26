@@ -1,0 +1,9 @@
+package test
+
+type ID string
+
+type MyTypeInput struct {
+	ID ID `json:"id"`
+	OtherID ID `json:"otherId"`
+	Name string `json:"name"`
+}
