@@ -1,0 +1,22 @@
+[
+  {
+    "type": "MyType",
+    "field": "other"
+  },
+  {
+    "type": "MyType",
+    "field": "pOthers"
+  },
+  {
+    "type": "MyType",
+    "field": "iOthers"
+  },
+  {
+    "type": "Query",
+    "field": "ping"
+  },
+  {
+    "type": "Mutation",
+    "field": "save"
+  }
+]

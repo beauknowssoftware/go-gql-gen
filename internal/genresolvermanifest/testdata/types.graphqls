@@ -1,0 +1,34 @@
+type Other {
+  name: Int
+}
+
+type MyType {
+  id: ID
+  myId: ID
+  name: String
+  names: [String]
+  other: Other @resolve
+  parent: Other
+  others: [Other]
+  pOthers(id: Int, name: String): OtherA @resolve
+  iOthers(input: MyTypeInput): OtherB @resolve
+}
+
+input MyTypeInput {
+   id: ID
+   otherId: ID
+   name: String
+}
+
+type Query {
+    ping: [String] @resolve
+}
+
+type Mutation {
+  save(id: ID): ID @resolve
+}
+
+schema {
+    query: Query
+    mutation: Mutation
+}
