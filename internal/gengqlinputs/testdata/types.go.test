@@ -18,11 +18,11 @@ type MyType struct {
 	MyID ID `json:"myId"`
 	Name string `json:"name"`
 	Names []string `json:"names"`
-	OtherLink
+	MyTypeOtherLink
 	Parent Other `json:"parent"`
 	Others []Other `json:"others"`
-	POthersLink
-	IOthersLink
+	MyTypePOthersLink
+	MyTypeIOthersLink
 }
 
 type MyTypePOthersArgs struct {
