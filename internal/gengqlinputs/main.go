@@ -109,7 +109,7 @@ func Run() {
 						return false
 					}
 					if hasResolveDirective(fn) {
-						fmt.Printf("\t%vLink\n", tn.Name)
+						fmt.Printf("\t%vLink\n", strings.Title(fn.Name))
 						return false
 					}
 					if strings.HasSuffix(fn.Name, "Id") {

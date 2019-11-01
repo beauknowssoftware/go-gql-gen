@@ -10,8 +10,8 @@ type MyType {
   other: Other @resolve
   parent: Other
   others: [Other]
-  pOthers(id: Int, name: String): OtherA @resolve
-  iOthers(input: MyTypeInput): OtherB @resolve
+  pOthers(id: Int, name: String): [Other] @resolve
+  iOthers(input: MyTypeInput): [Other] @resolve
 }
 
 input MyTypeInput {

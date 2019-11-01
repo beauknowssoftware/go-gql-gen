@@ -21,8 +21,8 @@ type MyType struct {
 	OtherLink
 	Parent Other `json:"parent"`
 	Others []Other `json:"others"`
-	OtherALink
-	OtherBLink
+	POthersLink
+	IOthersLink
 }
 
 type MyTypePOthersArgs struct {
