@@ -497,6 +497,32 @@ func TestLex(t *testing.T) {
 			expectedTokens: []parse.Token{
 				{
 					TokenType: parse.TextToken,
+					Value:     "directive",
+				},
+				{
+					TokenType: parse.AtToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value: "my_directive",
+				},
+				{
+					TokenType: parse.TextToken,
+					Value: "on",
+				},
+				{
+					TokenType: parse.TextToken,
+					Value: "FIELD_DEFINITION",
+				},
+				{
+					TokenType: parse.BarToken,
+				},
+				{
+					TokenType: parse.TextToken,
+					Value: "SOMETHING",
+				},
+				{
+					TokenType: parse.TextToken,
 					Value:     "type",
 				},
 				{

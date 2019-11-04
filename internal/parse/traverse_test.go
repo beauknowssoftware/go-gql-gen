@@ -144,6 +144,13 @@ func TestTraverse(t *testing.T) {
 			expectedNodes: []parse.Node{
 				parse.DocumentNode{
 					Definitions: []parse.Node{
+						parse.DirectiveDefNode{
+							Name:    "my_directive",
+							Targets: []string{
+								"FIELD_DEFINITION",
+								"SOMETHING",
+							},
+						},
 						parse.TypeDefNode{
 							Name: "Query",
 							Fields: []parse.Node{
@@ -173,6 +180,13 @@ func TestTraverse(t *testing.T) {
 								},
 							},
 						},
+					},
+				},
+				parse.DirectiveDefNode{
+					Name:    "my_directive",
+					Targets: []string{
+						"FIELD_DEFINITION",
+						"SOMETHING",
 					},
 				},
 				parse.TypeDefNode{

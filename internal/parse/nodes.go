@@ -5,6 +5,11 @@ type Node interface {
 	Loc() Loc
 }
 
+type LeafNode struct{}
+func (n LeafNode) Children() []Node {
+	return nil
+}
+
 type NodeLoc struct {
 	NodeLoc Loc
 }
@@ -37,6 +42,13 @@ func (n MultiNode) Children() []Node {
 
 type DefinitionNode interface {
 	Node
+}
+
+type DirectiveDefNode struct {
+	NodeLoc
+	LeafNode
+	Name   string
+	Targets []string
 }
 
 type TypeDefNode struct {
@@ -91,14 +103,11 @@ func (n FieldNode) Children() []Node {
 
 type TypeNode struct {
 	NodeLoc
+	LeafNode
 	Name            string
 	Required        bool
 	Multiple        bool
 	NonNullElements bool
-}
-
-func (n TypeNode) Children() []Node {
-	return nil
 }
 
 type ParamNode struct {
@@ -113,19 +122,14 @@ func (n ParamNode) Children() []Node {
 
 type DirectiveNode struct {
 	NodeLoc
+	LeafNode
 	Name string
-}
-
-func (n DirectiveNode) Children() []Node {
-	return nil
 }
 
 type TokenNode struct {
 	NodeLoc
+	LeafNode
 	TokenType TokenType
 	Value     string
 }
 
-func (n TokenNode) Children() []Node {
-	return nil
-}

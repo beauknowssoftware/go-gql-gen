@@ -1,3 +1,5 @@
+directive @my_directive on FIELD_DEFINITION | SOMETHING
+
 type Query {
     ping: String @my_directive @another_directive
 }

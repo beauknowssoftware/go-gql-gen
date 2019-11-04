@@ -47,7 +47,7 @@ func keyword(v string) parserPart {
 		}
 		p.consume()
 
-		return TokenNode{nodeLoc, TextToken, v}, nil
+		return TokenNode{nodeLoc, LeafNode{},TextToken, v}, nil
 	}
 }
 
@@ -61,7 +61,7 @@ func token(tt TokenType) parserPart {
 		t := p.current()
 		p.consume()
 
-		return TokenNode{nodeLoc, tt, t.Value}, nil
+		return TokenNode{nodeLoc, LeafNode{},tt, t.Value}, nil
 	}
 }
 
@@ -175,6 +175,7 @@ var required = token(BangToken)
 var parseDirective = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
 	return DirectiveNode{
 		nodeLoc,
+		LeafNode{},
 		nodes[1].(TokenNode).Value,
 	}, nil
 }, token(AtToken), identifier)
@@ -182,6 +183,7 @@ var parseDirective = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
 var parseArrayType = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
 	return TypeNode{
 		nodeLoc,
+		LeafNode{},
 		nodes[1].(TokenNode).Value,
 		nodes[4] != nil,
 		true,
@@ -192,6 +194,7 @@ var parseArrayType = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
 var parseSingleType = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
 	return TypeNode{
 		nodeLoc,
+		LeafNode{},
 		nodes[0].(TokenNode).Value,
 		nodes[1] != nil,
 		false,
@@ -227,6 +230,25 @@ var parseSchema = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
 	}, nil
 }, schemaKeyword, token(LeftCurlyToken), multi(parseField), token(RightCurlyToken))
 
+var directiveKeyword = keyword("directive")
+var onKeyword = keyword("on")
+
+var parseDirectiveTargetList = multiSep(identifier, token(BarToken))
+
+var parseDirectiveDef = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
+	targetNodes := nodes[4].(MultiNode).Nodes
+	targets := make([]string, len(targetNodes), len(targetNodes))
+	for i,node := range targetNodes {
+		targets[i] = node.(TokenNode).Value
+	}
+	return DirectiveDefNode{
+		nodeLoc,
+		LeafNode{},
+		nodes[2].(TokenNode).Value,
+		targets,
+	}, nil
+}, directiveKeyword, token(AtToken), identifier, onKeyword, parseDirectiveTargetList)
+
 var typeKeyword = keyword("type")
 
 var parseTypeDef = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
@@ -249,7 +271,7 @@ var parseInput = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
 	}, nil
 }, inputKeyword, identifier, token(LeftCurlyToken), multi(parseField), token(RightCurlyToken))
 
-var parseDefinition = choice(parseTypeDef, parseInput, parseSchema)
+var parseDefinition = choice(parseTypeDef, parseInput, parseSchema, parseDirectiveDef)
 
 var parseDocument = seq(func(nodeLoc NodeLoc, nodes ...Node) (Node, error) {
 	return DocumentNode{nodeLoc, nodes[0].(MultiNode).Nodes}, nil

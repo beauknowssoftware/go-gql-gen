@@ -102,6 +102,9 @@ func (l *Lexer) Lex(c chan Token) {
 		case r == ']':
 			c <- l.newToken(RightBracketToken, "", l.loc)
 			l.increment()
+		case r == '|':
+			c <- l.newToken(BarToken, "", l.loc)
+			l.increment()
 		case unicode.IsSpace(r):
 			s := l.loc
 			w := l.while(unicode.IsSpace)

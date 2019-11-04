@@ -130,6 +130,13 @@ func TestParse(t *testing.T) {
 		"directives.graphqls": {
 			expectedAST: parse.DocumentNode{
 				Definitions: []parse.Node{
+					parse.DirectiveDefNode{
+						Name:    "my_directive",
+						Targets: []string{
+							"FIELD_DEFINITION",
+							"SOMETHING",
+						},
+					},
 					parse.TypeDefNode{
 						Name: "Query",
 						Fields: []parse.Node{

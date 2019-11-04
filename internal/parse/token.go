@@ -29,6 +29,7 @@ const (
 	AtToken
 	LeftBracketToken
 	RightBracketToken
+	BarToken
 	EOFToken
 )
 
@@ -58,6 +59,8 @@ func (tt TokenType) String() string {
 		return "left bracket"
 	case RightBracketToken:
 		return "right bracket"
+	case BarToken:
+		return "bar"
 	case EOFToken:
 		return "end of file"
 	default:
