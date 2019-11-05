@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/beauknowssoftware/go-gql-gen/internal/parse"
+	"github.com/beauknowssoftware/go-gql-gen/pkg/parse"
 )
 
 var packageFlag = flag.String("package", "", "")

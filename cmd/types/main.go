@@ -7,7 +7,7 @@ import (
 	"os"
 	"sort"
 
-	"github.com/beauknowssoftware/go-gql-gen/internal/parse"
+	"github.com/beauknowssoftware/go-gql-gen/pkg/parse"
 )
 
 var sortFlag = flag.Bool("sort", false, "")

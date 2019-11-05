@@ -47,7 +47,7 @@ func keyword(v string) parserPart {
 		}
 		p.consume()
 
-		return TokenNode{nodeLoc, LeafNode{},TextToken, v}, nil
+		return TokenNode{nodeLoc, LeafNode{}, TextToken, v}, nil
 	}
 }
 

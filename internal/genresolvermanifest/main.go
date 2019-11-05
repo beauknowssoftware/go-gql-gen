@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/beauknowssoftware/go-gql-gen/internal/parse"
+	"github.com/beauknowssoftware/go-gql-gen/pkg/parse"
 )
 
 func hasResolveDirective(fn parse.FieldNode) bool {
